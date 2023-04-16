@@ -6,7 +6,7 @@ Welcome to the Stock Analysis Website GitHub repository! This project aims to cr
 
 Some of the key features we plan to include in this web application are:
 
-- Trading dashboard
+- Trading dashboard page 
 - Stock search functionality
 - Portfolio management functionality
 - Real-time market data
