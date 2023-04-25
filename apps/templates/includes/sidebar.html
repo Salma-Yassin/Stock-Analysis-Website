@@ -14,7 +14,7 @@
           <img src="/static/assets/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="{{ url_for('authentication_blueprint.logout') }}" class="d-block">
+          <a href="{{ url_for('logout') }}" class="d-block">
             {{ current_user.username }} - Logout
           </a>
         </div>
@@ -409,7 +409,7 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{url_for('authentication_blueprint.recoverpassword')}}" class="nav-link">
+                <a href="{{url_for('recoverpassword')}}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Recover Password</p>
                 </a>

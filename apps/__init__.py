@@ -5,53 +5,42 @@ Copyright (c) 2019 - present AppSeed.us
 
 import os
 
+# import Flask 
 from flask import Flask
-from flask_login import LoginManager
+from .config import Config
 from flask_sqlalchemy import SQLAlchemy
-from importlib import import_module
+from os import path
+from .models import db, Users
+from flask_login import LoginManager
+
+# Inject Flask magic
+app = Flask(__name__)
+
+# load Configuration
+app.config.from_object( Config )
+app.config['SECRET_KEY'] = 'supersecretkey'  #yara
 
 
-db = SQLAlchemy()
+# Import routing to render the pages
+from apps import views
+
 login_manager = LoginManager()
+login_manager.login_view = 'accounts_sign_in'
+login_manager.init_app(app)
+
+@login_manager.user_loader
+def load_user(id):
+    return Users.query.get(int(id))
+
+DB_NAME = "database.db"
+app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
+db.init_app(app)
 
 
-def register_extensions(app):
-    db.init_app(app)
-    login_manager.init_app(app)
+def create_database(app):
+    if not path.exists('apps/' + DB_NAME):
+        with app.app_context():
+             db.create_all()
 
-
-def register_blueprints(app):
-    for module_name in ('authentication', 'home'):
-        module = import_module('apps.{}.routes'.format(module_name))
-        app.register_blueprint(module.blueprint)
-
-
-def configure_database(app):
-
-    @app.before_first_request
-    def initialize_database():
-        try:
-            db.create_all()
-        except Exception as e:
-
-            print('> Error: DBMS Exception: ' + str(e) )
-
-            # fallback to SQLite
-            basedir = os.path.abspath(os.path.dirname(__file__))
-            app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'db.sqlite3')
-
-            print('> Fallback to SQLite ')
-            db.create_all()
-
-    @app.teardown_request
-    def shutdown_session(exception=None):
-        db.session.remove()
-
-
-def create_app(config):
-    app = Flask(__name__)
-    app.config.from_object(config)
-    register_extensions(app)
-    register_blueprints(app)
-    configure_database(app)
-    return app
+# Now the database is created and linked  
+create_database(app)
