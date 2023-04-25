@@ -1,0 +1,152 @@
+[
+  {
+    "symbol": "AAPL",
+    "name": "Apple Inc.",
+    "exchange": "NASDAQ",
+    "price": 134.16,
+    "change": -0.85,
+    "percentChange": -0.63,
+    "volume": 88651200,
+    "marketCap": 2238610000000
+  },
+  {
+    "symbol": "GOOGL",
+    "name": "Alphabet Inc.",
+    "exchange": "NASDAQ",
+    "price": 2304.52,
+    "change": 11.58,
+    "percentChange": 0.51,
+    "volume": 1129500,
+    "marketCap": 1544770000000
+  },
+  {
+    "symbol": "TSLA",
+    "name": "Tesla Inc.",
+    "exchange": "NASDAQ",
+    "price": 729.40,
+    "change": -7.45,
+    "percentChange": -1.01,
+    "volume": 27578400,
+    "marketCap": 743564000000
+  },
+  {
+    "symbol": "AMZN",
+    "name": "Amazon.com Inc.",
+    "exchange": "NASDAQ",
+    "price": 3409.08,
+    "change": -33.09,
+    "percentChange": -0.96,
+    "volume": 2885600,
+    "marketCap": 1705400000000
+  },
+  {
+    "symbol": "MSFT",
+    "name": "Microsoft Corporation",
+    "exchange": "NASDAQ",
+    "price": 259.43,
+    "change": -1.14,
+    "percentChange": -0.44,
+    "volume": 21469800,
+    "marketCap": 1959700000000
+  },
+  {
+    "symbol": "FB",
+    "name": "Facebook Inc.",
+    "exchange": "NASDAQ",
+    "price": 309.76,
+    "change": -1.79,
+    "percentChange": -0.57,
+    "volume": 11694100,
+    "marketCap": 880450000000
+  },
+  {
+    "symbol": "NVDA",
+    "name": "NVIDIA Corporation",
+    "exchange": "NASDAQ",
+    "price": 586.84,
+    "change": 1.99,
+    "percentChange": 0.34,
+    "volume": 7175600,
+    "marketCap": 365880000000
+  },
+  {
+    "symbol": "JPM",
+    "name": "JPMorgan Chase & Co.",
+    "exchange": "NYSE",
+    "price": 153.47,
+    "change": -0.38,
+    "percentChange": -0.25,
+    "volume": 5709000,
+    "marketCap": 461620000000
+  },
+  {
+    "symbol": "BAC",
+    "name": "Bank of America Corporation",
+    "exchange": "NYSE",
+    "price": 40.00,
+    "change": -0.27,
+    "percentChange": -0.67,
+    "volume": 34966000,
+    "marketCap": 335630000000
+  },
+  {
+    "symbol": "WMT",
+    "name": "Walmart Inc.",
+    "exchange": "NYSE",
+    "price": 139.44,
+    "change": 0.39,
+    "percentChange": 0.28,
+    "volume": 4135400,
+    "marketCap": 391580000000
+  },
+  {
+    "symbol": "PG",
+    "name": "Procter & Gamble Company",
+    "exchange": "NYSE",
+    "price": 134.74,
+    "change": -0.34,
+    "percentChange": -0.25,
+    "volume": 3030400,
+    "marketCap": 331910000000
+  },
+  {
+    "symbol": "V",
+    "name": "Visa Inc.",
+    "exchange": "NYSE",
+    "price": 225.60,
+    "change": -1.79,
+    "percentChange": -0.79,
+    "volume": 4887400,
+    "marketCap": 501750000000
+  },
+  {
+    "symbol": "JNJ",
+    "name": "Johnson & Johnson",
+    "exchange": "NYSE",
+    "price": 164.09,
+    "change": -0.74,
+    "percentChange": -0.45,
+    "volume": 6056700,
+    "marketCap": 433530000000
+  },
+  {
+    "symbol": "KO",
+    "name": "The Coca-Cola Company",
+    "exchange": "NYSE",
+    "price": 54.83,
+    "change": -0.16,
+    "percentChange": -0.29,
+    "volume": 8219400,
+    "marketCap": 236770000000
+  },
+  {
+    "symbol": "PFE",
+    "name": "Pfizer Inc.",
+    "exchange": "NYSE",
+    "price": 38.04,
+    "change": -0.20,
+    "percentChange": -0.52,
+    "volume": 20822100,
+    "marketCap": 211470000000
+  }
+]

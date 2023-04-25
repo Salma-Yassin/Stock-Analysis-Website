@@ -185,3 +185,11 @@ def get_segment(request):
         return None
 
 
+
+
+#----------- APIs---------#
+@app.route('/data') # this is a dummy api that should be removed 
+def get_chart_data():
+   # generating random data for testing 
+   f = open("apps\data.json")
+   return json.load(f)
