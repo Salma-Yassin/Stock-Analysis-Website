@@ -16,6 +16,8 @@ from apps.authentication.forms import LoginForm, CreateAccountForm
 from apps.authentication.models import Users
 
 from apps.authentication.util import verify_pass
+from .controller import controller
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 @blueprint.route('/')
@@ -97,6 +99,20 @@ def logout():
     logout_user()
     return redirect(url_for('authentication_blueprint.login'))
 
+
+@blueprint.route('/recoverpassword', methods=['GET', 'POST'])
+def recoverpassword():
+    if request.method == 'POST':
+        password1 = request.form.get('password1')
+        password2 = request.form.get('password2')
+        if password1 != password2:
+            return render_template('home/examples-recover-password.html', msg ='Un-matched passwords')
+            # flash('Passwords don\'t match.', category='error')
+        user_id = current_user.id
+        controller.editUser(id=user_id,password=password1)
+        return redirect(url_for('home_blueprint.index'))
+    else:
+        return render_template('home/examples-recover-password.html')
 
 # Errors
 

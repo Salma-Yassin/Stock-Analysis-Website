@@ -14,7 +14,7 @@ class LoginForm(FlaskForm):
     username = StringField('Username',
                          id='username_login',
                          validators=[DataRequired()])
-    password = PasswordField('Password',
+    password = StringField('Password',
                              id='pwd_login',
                              validators=[DataRequired()])
 
@@ -26,6 +26,6 @@ class CreateAccountForm(FlaskForm):
     email = StringField('Email',
                       id='email_create',
                       validators=[DataRequired(), Email()])
-    password = PasswordField('Password',
+    password = StringField('Password',
                              id='pwd_create',
                              validators=[DataRequired()])
