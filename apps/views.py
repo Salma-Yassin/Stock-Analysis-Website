@@ -93,6 +93,9 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
+## profile Settings 
+
+# Recover Password
 @app.route('/recoverpassword', methods=['GET', 'POST'])
 def recoverpassword():
     if request.method == 'POST':
@@ -107,9 +110,78 @@ def recoverpassword():
         return render_template('home/examples-recover-password.html')
     
 
+# Editing Profile
+@app.route('/editingprofile', methods=['GET', 'POST'])
+def editingprofile():
+    if request.method == 'POST':
+
+        user_id = current_user.id
+
+        if request.form.get('edit_account'):
+            username = request.form.get('username_edit')
+            email = request.form.get('email_edit')
+
+        
+            controller.editUser(id=user_id, name=username, email=email)
+            return redirect(url_for('index'))
+        
+        elif request.form.get('delete_account'):
+            password = request.form.get('delete_password')
+
+            if check_password_hash(current_user.password, password):
+                controller.deleteUser(id=user_id)
+                logout_user()
+                return redirect(url_for('login', msg='Account Deleted'))
+
+            else:
+                return render_template('home/edit-profile.html', user=current_user, msg='Wrong password')
+            
+    else:
+        return render_template('home/edit-profile.html', user=current_user)
+    
+
+
 @app.route('/index')
 @login_required
 def index():
     return render_template('home/index.html', segment='index')
+
+
+@app.route('/<template>')
+@login_required
+def route_template(template):
+
+    try:
+
+        if not template.endswith('.html'):
+            template += '.html'
+
+        # Detect the current page
+        segment = get_segment(request)
+
+        # Serve the file (if exists) from app/templates/home/FILE.html
+        return render_template("home/" + template, segment=segment)
+
+    except TemplateNotFound:
+        return render_template('home/page-404.html'), 404
+
+    except:
+        return render_template('home/page-500.html'), 500
+
+
+# Helper - Extract current page name from request
+def get_segment(request):
+
+    try:
+
+        segment = request.path.split('/')[-1]
+
+        if segment == '':
+            segment = 'index'
+
+        return segment
+
+    except:
+        return None
 
 
