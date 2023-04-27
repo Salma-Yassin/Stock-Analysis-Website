@@ -93,6 +93,9 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
+## profile Settings 
+
+# Recover Password
 @app.route('/recoverpassword', methods=['GET', 'POST'])
 def recoverpassword():
     if request.method == 'POST':
@@ -106,6 +109,37 @@ def recoverpassword():
     else:
         return render_template('home/examples-recover-password.html')
     
+
+# Editing Profile
+@app.route('/editingprofile', methods=['GET', 'POST'])
+def editingprofile():
+    if request.method == 'POST':
+
+        user_id = current_user.id
+
+        if request.form.get('edit_account'):
+            username = request.form.get('username_edit')
+            email = request.form.get('email_edit')
+
+        
+            controller.editUser(id=user_id, name=username, email=email)
+            return redirect(url_for('index'))
+        
+        elif request.form.get('delete_account'):
+            password = request.form.get('delete_password')
+
+            if check_password_hash(current_user.password, password):
+                controller.deleteUser(id=user_id)
+                logout_user()
+                return redirect(url_for('login', msg='Account Deleted'))
+
+            else:
+                return render_template('home/edit-profile.html', user=current_user, msg='Wrong password')
+            
+    else:
+        return render_template('home/edit-profile.html', user=current_user)
+    
+
 
 @app.route('/index')
 @login_required
@@ -149,3 +183,11 @@ def get_segment(request):
 
     except:
         return None
+
+
+#----------- APIs---------#
+@app.route('/data') # this is a dummy api that should be removed 
+def get_chart_data():
+   # generating random data for testing 
+   f = open("apps\data.json")
+   return json.load(f)

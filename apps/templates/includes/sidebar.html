@@ -67,6 +67,38 @@
             </ul>
           </li>
           <li class="nav-item">
+            <a href="/watchlist.html" class="nav-link">
+              <i class="nav-icon far fa-image"></i>
+              <p>
+                Watchlist
+              </p>
+            </a>
+          </li>
+          <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+              <i class="nav-icon far fa-plus-square"></i>
+              <p>
+                Profile Settings
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{{url_for('editingprofile')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Editing Profile</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{url_for('recoverpassword')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Recover Password</p>
+                </a>
+              </li>
+              
+            </ul>
+          </li>
+          <li class="nav-item">
             <a href="widgets.html" class="nav-link {% if 'widgets' in segment %} active {% endif %}">
               <i class="nav-icon fas fa-th"></i>
               <p>

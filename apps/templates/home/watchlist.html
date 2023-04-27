@@ -1,0 +1,181 @@
+{% extends "layouts/base.html" %} {% block title %} Dashboard3 {% endblock %}
+
+<!-- Element injected in the BODY element -->
+{% block body_class %} sidebar-mini {% endblock body_class %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+
+<!-- Google Font: Source Sans Pro -->
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback"
+/>
+<!-- Font Awesome Icons -->
+<link
+  rel="stylesheet"
+  href="/static/assets/plugins/fontawesome-free/css/all.min.css"
+/>
+<!-- IonIcons -->
+<link
+  rel="stylesheet"
+  href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"
+/>
+<!-- Theme style -->
+<link rel="stylesheet" href="/static/assets/css/adminlte.min.css" />
+
+{% endblock stylesheets %} {% block content %}
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0 text-dark">Watchlist</h1>
+        </div>
+        <!-- /.col -->
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active">Dashboard v3</li>
+          </ol>
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+  </div>
+  <!-- /.content-header -->
+
+  <!-- Main content -->
+  <div class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-8">
+          <!-- /.card -->
+
+          <div class="card">
+            <div class="card-header border-0">
+              <h3 class="card-title">Products</h3>
+              <div class="card-tools">
+                <a href="#" class="btn btn-tool btn-sm">
+                  <i class="fas fa-download"></i>
+                </a>
+                <a href="#" class="btn btn-tool btn-sm">
+                  <i class="fas fa-bars"></i>
+                </a>
+              </div>
+            </div>
+            <div class="card-body table-responsive p-0">
+                <table class="table table-striped table-valign-middle">
+                  <thead>
+                    <tr>
+                      <th>Symbol</th>
+                      <th>Name</th>
+                      <th>Exchange</th>
+                      <th>Price</th>
+                      <th>Change</th>
+                      <th>Percent Change</th>
+                      <th>Volume</th>
+                      <th>Market Cap</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  </tbody>
+                </table>
+              </div>
+          </div>
+          <!-- /.card -->
+        </div>
+        <!-- /.col-md-6 -->
+      </div>
+      <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+  </div>
+  <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+<!-- jQuery -->
+<script src="/static/assets/plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap -->
+<script src="/static/assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE -->
+<script src="/static/assets/js/adminlte.js"></script>
+
+<!-- OPTIONAL SCRIPTS -->
+<script src="/static/assets/plugins/chart.js/Chart.min.js"></script>
+<script src="/static/assets/js/demo.js"></script>
+<script src="/static/assets/js/pages/dashboard3.js"></script>
+
+<script>
+  
+    var getStockData = $.get('/data');
+  
+    getStockData.done(function (stocks) {
+      console.log(stocks);
+      // Get the table body element
+      const tableBody = document.querySelector("tbody");
+  
+      // Loop through the stocks and create a row for each one
+      stocks.forEach((stock) => {
+        // Create the row element
+        const row = document.createElement("tr");
+  
+        // Create the symbol cell
+        const symbolCell = document.createElement("td");
+        symbolCell.appendChild(document.createTextNode(stock.symbol));
+        row.appendChild(symbolCell);
+  
+        // Create the name cell
+        const nameCell = document.createElement("td");
+        nameCell.appendChild(document.createTextNode(stock.name));
+        row.appendChild(nameCell);
+  
+        // Create the exchange cell
+        const exchangeCell = document.createElement("td");
+        exchangeCell.appendChild(document.createTextNode(stock.exchange));
+        row.appendChild(exchangeCell);
+  
+        // Create the price cell
+        const priceCell = document.createElement("td");
+        priceCell.appendChild(document.createTextNode(stock.price));
+        row.appendChild(priceCell);
+  
+        // Create the change cell
+        const changeCell = document.createElement("td");
+        changeCell.appendChild(document.createTextNode(stock.change));
+        row.appendChild(changeCell);
+  
+        // Create the percent change cell
+        const percentChangeCell = document.createElement("td");
+        percentChangeCell.appendChild(document.createTextNode(stock.percentChange));
+        row.appendChild(percentChangeCell);
+  
+        // Create the volume cell
+        const volumeCell = document.createElement("td");
+        volumeCell.appendChild(document.createTextNode(stock.volume));
+        row.appendChild(volumeCell);
+  
+        // Create the market cap cell
+        const marketCapCell = document.createElement("td");
+        marketCapCell.appendChild(document.createTextNode(stock.marketCap));
+        row.appendChild(marketCapCell);
+  
+        // Add the row to the table body
+        tableBody.appendChild(row);
+      });
+    });
+  
+  </script>
+
+{% endblock javascripts %}

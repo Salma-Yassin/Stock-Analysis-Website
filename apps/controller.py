@@ -11,3 +11,8 @@ class controller:
         if name != '':
             user.username = name
         db.session.commit()
+
+    def deleteUser(id):
+        user = Users.query.filter_by(id=id).first()
+        db.session.delete(user)
+        db.session.commit()
