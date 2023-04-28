@@ -26,6 +26,7 @@ from apps import app
 import random
 from datetime import datetime, timedelta
 
+import requests
 
 @app.route('/')
 def route_default():
@@ -168,7 +169,26 @@ def route_template(template):
     except:
         return render_template('home/page-500.html'), 500
 
+@app.route('/watchlist')
+def get_stock_data():
+    symbols = ['AAPL', 'AMZN', 'GOOGL', 'MSFT', 'TSLA', 'V', 'NFLX', 'DIS', 'NVDA', 'AMD', 'BA', 'GE', 'IBM', 'INTC', 'KO', 'PFE', 'XOM', 'CVX', 'T', 'VZ'] # List of symbols
+    headers = {
+        "content-type": "application/octet-stream",
+        "X-RapidAPI-Key": "c91a4b454emsh049aaf0bec003eep18bdf2jsn131c8d0ac347",
+        "X-RapidAPI-Host": "yahoo-finance15.p.rapidapi.com"
+    }
+    data = {} # Empty dictionary to store data for all symbols
 
+    for symbol in symbols:
+        url = f"https://yahoo-finance15.p.rapidapi.com/api/yahoo/qu/quote/{symbol}/financial-data"
+        response = requests.get(url, headers=headers)
+        if response.status_code == 200: # Check if the request was successful
+            data[symbol] = response.json() # Add the response data to the dictionary
+        else:
+            print(f"Failed to get data for {symbol}") # Handle the error case
+
+    # Return the dictionary as JSON
+    return json.dumps(data)
 # Helper - Extract current page name from request
 def get_segment(request):
 
@@ -185,9 +205,4 @@ def get_segment(request):
         return None
 
 
-#----------- APIs---------#
-@app.route('/data') # this is a dummy api that should be removed 
-def get_chart_data():
-   # generating random data for testing 
-   f = open("apps\data.json")
-   return json.load(f)
+
