@@ -142,10 +142,10 @@ def editingprofile():
     
 
 
-@app.route('/index')
+@app.route('/main-dashboard.html')
 @login_required
 def index():
-    return render_template('home/index.html', segment='index')
+    return render_template('home/main-dashboard.html', segment='index')
 
 
 @app.route('/<template>')
@@ -169,7 +169,25 @@ def route_template(template):
     except:
         return render_template('home/page-500.html'), 500
 
-@app.route('/watchlist')
+# Helper - Extract current page name from request
+def get_segment(request):
+
+    try:
+
+        segment = request.path.split('/')[-1]
+
+        if segment == '':
+            segment = 'index'
+
+        return segment
+
+    except:
+        return None
+    
+
+#----------- APIs---------#
+
+@app.route('/main-dashboard-data')
 def get_stock_data():
     symbols = ['AAPL', 'AMZN', 'GOOGL', 'MSFT', 'TSLA', 'V', 'NFLX', 'DIS', 'NVDA', 'AMD', 'BA', 'GE', 'IBM', 'INTC', 'KO', 'PFE', 'XOM', 'CVX', 'T', 'VZ'] # List of symbols
     headers = {
@@ -189,20 +207,46 @@ def get_stock_data():
 
     # Return the dictionary as JSON
     return json.dumps(data)
-# Helper - Extract current page name from request
-def get_segment(request):
 
-    try:
+@app.route('/data') # this is a dummy api that should be removed 
+def get_chart_data():
+   # generating random data for testing 
+   f = open("apps\dataMazen.json")
+   return json.load(f)
 
-        segment = request.path.split('/')[-1]
+@app.route('/add_to_watchlist', methods=['GET', 'POST']) # this is a dummy api that should be removed 
+def add_to_watchlist():
+   if request.method == 'GET':
+    watchList = UserWatchList.query.filter_by(user_id=current_user.id)
+    item = {}
+    for watchListItem in watchList:
+        
+        financialData = json.loads(watchListItem.item)
+        symbol = list(financialData.keys())[0] 
+        
+        item[symbol] = financialData[symbol]
 
-        if segment == '':
-            segment = 'index'
+        # print(watchListItem.item)
+        # print(symbol)
+        # print(financialData[symbol])
+        
+    
+    return json.dumps(item)
+    # with open("apps/User_watchlist.json") as f:
+    #    data = json.load(f)
+    # return data
+  
+   elif request.method == 'POST':
+    data = request.get_json()
+    print(json.dumps(data))
 
-        return segment
-
-    except:
-        return None
+    controller.addUserWatchList(item =json.dumps(data) , user_id=current_user.id)
+    # redirect(url_for('login'))
+    # render_template('home/page-500.html')
+    # with open("apps/User_watchlist.json", "w") as f:
+    #   json.dump(data, f)
+    return jsonify({'status': 'success'})
+  
 
 
 

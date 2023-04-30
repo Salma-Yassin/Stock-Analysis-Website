@@ -15,3 +15,12 @@ class Users(db.Model, UserMixin):
     username = db.Column(db.String(64), unique=True)
     email = db.Column(db.String(150), unique=True)
     password = db.Column(db.String(150))
+
+@dataclass
+class UserWatchList(db.Model):
+    item : str
+
+    id = db.Column(db.Integer, primary_key=True)
+    item = db.Column(db.String, nullable=False)
+    user_id = db.Column(db.ForeignKey(Users.id, ondelete='CASCADE'),
+                        nullable=False)

@@ -42,6 +42,11 @@
             <li class="breadcrumb-item active">Dashboard v3</li>
           </ol>
         </div>
+        <div class="offset-sm-2 col-sm-10 text-right">
+          <a class="btn btn-app" onclick="location.reload();">
+            <i class="fas fa-sync-alt"></i> Refresh
+          </a>
+        </div>
         <!-- /.col -->
       </div>
       <!-- /.row -->
@@ -120,14 +125,16 @@
 
 <script>
   
-   var getStockData = $.get('/watchlist');
+   var getStockData = $.get('/add_to_watchlist');
   // Get the table body element
-    const tableBody = document.querySelector("tbody");
     getStockData.done(function (stocks) {
     const stockData = JSON.parse(stocks);
     const tableBody = document.querySelector("tbody");
-    
+    console.log(stockData)
+
     for (const [symbol, financialData] of Object.entries(stockData)) {
+      console.log(symbol)
+      console.log(financialData)
       const row = document.createElement("tr");
 
       const symbolCell = document.createElement("td");
@@ -165,6 +172,7 @@
       tableBody.appendChild(row);
     };// End of For Loop
   });
+  
   </script>
 
 {% endblock javascripts %}

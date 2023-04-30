@@ -1,0 +1,32 @@
+{
+    "AAPL": {
+        "financialData": {
+            "currentPrice": {
+                "fmt": "169.68",
+                "raw": 169.68
+            },
+            "maxAge": 86400,
+            "recommendationKey": "buy",
+            "recommendationMean": {
+                "fmt": "2.00",
+                "raw": 2
+            },
+            "targetHighPrice": {
+                "fmt": "205.00",
+                "raw": 205
+            },
+            "targetLowPrice": {
+                "fmt": "116.00",
+                "raw": 116
+            },
+            "targetMeanPrice": {
+                "fmt": "170.89",
+                "raw": 170.89
+            },
+            "targetMedianPrice": {
+                "fmt": "173.50",
+                "raw": 173.5
+            }
+        }
+    }
+}

@@ -1,0 +1,122 @@
+{
+    "AAPL": {
+        "financialData": {
+            "maxAge": 86400,
+            "currentPrice": {
+                "raw": 169.68,
+                "fmt": "169.68"
+            },
+            "targetHighPrice": {
+                "raw": 205,
+                "fmt": "205.00"
+            },
+            "targetLowPrice": {
+                "raw": 116,
+                "fmt": "116.00"
+            },
+            "targetMeanPrice": {
+                "raw": 170.89,
+                "fmt": "170.89"
+            },
+            "targetMedianPrice": {
+                "raw": 173.5,
+                "fmt": "173.50"
+            },
+            "recommendationMean": {
+                "raw": 2,
+                "fmt": "2.00"
+            },
+            "recommendationKey": "buy"
+        }
+    },
+    "GOOG": {
+        "financialData": {
+            "maxAge": 86400,
+            "currentPrice": {
+                "raw": 108.22,
+                "fmt": "108.22"
+            },
+            "targetHighPrice": {
+                "raw": 145,
+                "fmt": "145.00"
+            },
+            "targetLowPrice": {
+                "raw": 119,
+                "fmt": "119.00"
+            },
+            "targetMeanPrice": {
+                "raw": 127.22,
+                "fmt": "127.22"
+            },
+            "targetMedianPrice": {
+                "raw": 125,
+                "fmt": "125.00"
+            },
+            "recommendationMean": {
+                "raw": 1.5,
+                "fmt": "1.50"
+            },
+            "recommendationKey": "strong_buy"
+        }
+    },
+    "MSFT": {
+        "financialData": {
+            "maxAge": 86400,
+            "currentPrice": {
+                "raw": 303.33,
+                "fmt": "303.33"
+            },
+            "targetHighPrice": {
+                "raw": 375,
+                "fmt": "375.00"
+            },
+            "targetLowPrice": {
+                "raw": 280,
+                "fmt": "280.00"
+            },
+            "targetMeanPrice": {
+                "raw": 337.24,
+                "fmt": "337.24"
+            },
+            "targetMedianPrice": {
+                "raw": 340,
+                "fmt": "340.00"
+            },
+            "recommendationMean": {
+                "raw": 1.7,
+                "fmt": "1.70"
+            },
+            "recommendationKey": "buy"
+        }
+    },
+    "TSLA": {
+        "financialData": {
+            "maxAge": 86400,
+            "currentPrice": {
+                "raw": 164.31,
+                "fmt": "164.31"
+            },
+            "targetHighPrice": {
+                "raw": 300,
+                "fmt": "300.00"
+            },
+            "targetLowPrice": {
+                "raw": 24.33,
+                "fmt": "24.33"
+            },
+            "targetMeanPrice": {
+                "raw": 182.19,
+                "fmt": "182.19"
+            },
+            "targetMedianPrice": {
+                "raw": 191.5,
+                "fmt": "191.50"
+            },
+            "recommendationMean": {
+                "raw": 2.5,
+                "fmt": "2.50"
+            },
+            "recommendationKey": "buy"
+        }
+    }
+}
