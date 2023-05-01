@@ -5,22 +5,38 @@
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}
-
+<style>
+  #symbol-list li {
+    display: flex;
+    align-items: center;
+    height: 33.33%;
+  }
+  #symbol-list li a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 0.5rem;
+    background-color: #fff;
+    color: #343a40;
+    border: none;
+    border-radius: 0;
+    text-align: center;
+    text-decoration: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+  }
+  #symbol-list li a:hover {
+    background-color: #343a40;
+    color: #fff;
+  }
+</style>
 <!-- Google Font: Source Sans Pro -->
-<link
-  rel="stylesheet"
-  href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback"
-/>
+<link rel="stylesheet"
+  href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback" />
 <!-- Font Awesome Icons -->
-<link
-  rel="stylesheet"
-  href="/static/assets/plugins/fontawesome-free/css/all.min.css"
-/>
+<link rel="stylesheet" href="/static/assets/plugins/fontawesome-free/css/all.min.css" />
 <!-- IonIcons -->
-<link
-  rel="stylesheet"
-  href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"
-/>
+<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" />
 <!-- Theme style -->
 <link rel="stylesheet" href="/static/assets/css/adminlte.min.css" />
 
@@ -59,7 +75,7 @@
   <div class="content">
     <div class="container-fluid">
       <div class="row">
-        <div class="col-lg-8">
+        <div class="col-lg-12">
           <!-- /.card -->
 
           <div class="card">
@@ -76,27 +92,47 @@
             </div>
             <div id="stock-data"></div>
             <div class="card-body table-responsive p-0">
-                <table class="table table-striped table-valign-middle">
-                  <thead>
-                    <tr>
-                      <th>Symbol</th>
-                      <th>Current Price</th>
-                      <th>Target High Price</th>
-                      <th>Target Low Price</th>
-                      <th>Target Mean Price</th>
-                      <th>Target Median Price</th>
-                      <th>Recommendation</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                  </tbody>
-                </table>
-              </div>
+              <table class="table table-striped table-valign-middle">
+                <thead>
+                  <tr>
+                    <th>Symbol</th>
+                    <th>Current Price</th>
+                    <th>Target High Price</th>
+                    <th>Target Low Price</th>
+                    <th>Target Mean Price</th>
+                    <th>Target Median Price</th>
+                    <th>Recommendation</th>
+                  </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table>
+            </div>
           </div>
-          <!-- /.card -->
         </div>
-        <!-- /.col-md-6 -->
       </div>
+      <div class="row">
+        <div class="col-lg-8">
+          <div class="card" style="background-color: #343a40;">
+            <div class="card-body">
+              <div class="row h-100">
+                <div class="col-lg-4 my-auto">
+                  <ul id="symbol-list" class="h-100">
+                    <li><a href="#" onclick="updateChart('AAPL')">AAPL</a></li>
+                    <li><a href="#" onclick="updateChart('GOOG')">GOOG</a></li>
+                    <li><a href="#" onclick="updateChart('MSFT')">MSFT</a></li>
+                  </ul>
+                </div>
+                <div class="col-lg-8">
+                  <title>Stock Prices</title>
+                  <canvas id="myChart"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- /.row -->
     </div>
     <!-- /.container-fluid -->
@@ -124,10 +160,10 @@
 <script src="/static/assets/js/pages/dashboard3.js"></script>
 
 <script>
-  
-   var getStockData = $.get('/add_to_watchlist');
+
+  var getStockData = $.get('/add_to_watchlist');
   // Get the table body element
-    getStockData.done(function (stocks) {
+  getStockData.done(function (stocks) {
     const stockData = JSON.parse(stocks);
     const tableBody = document.querySelector("tbody");
     console.log(stockData)
@@ -160,7 +196,7 @@
       const targetMedianPriceCell = document.createElement("td");
       targetMedianPriceCell.textContent = financialData.financialData.targetMedianPrice.fmt;
       row.appendChild(targetMedianPriceCell);
-      
+
       // Create the recommendation cell
       const recommendationCell = document.createElement("td");
       recommendationCell.appendChild(document.createTextNode(financialData.financialData.recommendationKey));
@@ -172,7 +208,207 @@
       tableBody.appendChild(row);
     };// End of For Loop
   });
-  
-  </script>
+
+  const jsonData = {
+    '2023-04-28': { '1. open': '125.5500', '2. high': '127.2500', '3. low': '124.5600', '4. close': '126.4100', '5. volume': '20644224' },
+    '2023-04-21': { '1. open': '128.3000', '2. high': '130.9800', '3. low': '125.2700', '4. close': '125.7300', '5. volume': '30341128' },
+    '2023-04-14': { '1. open': '129.8300', '2. high': '131.1050', '3. low': '126.0000', '4. close': '128.1400', '5. volume': '19506500' },
+    '2023-04-06': { '1. open': '130.9700', '2. high': '132.6100', '3. low': '130.3150', '4. close': '130.5000', '5. volume': '13172262' },
+    '2023-03-31': { '1. open': '126.4700', '2. high': '131.4800', '3. low': '126.4700', '4. close': '131.0900', '5. volume': '20779522' },
+    '2023-03-24': { '1. open': '124.3100', '2. high': '127.2150', '3. low': '122.6000', '4. close': '125.2900', '5. volume': '20458253' },
+    '2023-03-17': { '1. open': '125.1500', '2. high': '128.1900', '3. low': '121.7100', '4. close': '123.6900', '5. volume': '66132690' },
+    '2023-03-10': { '1. open': '129.6400', '2. high': '130.8600', '3. low': '125.1300', '4. close': '125.4500', '5. volume': '20761401' },
+    '2023-03-03': { '1. open': '131.4200', '2. high': '131.8700', '3. low': '127.7100', '4. close': '129.6400', '5. volume': '17865677' },
+    '2023-02-24': { '1. open': '134.0000', '2. high': '134.3850', '3. low': '128.8600', '4. close': '130.5700', '5. volume': '14198950' },
+    '2023-02-17': { '1. open': '136.0000', '2. high': '137.3900', '3. low': '133.8900', '4. close': '135.0200', '5. volume': '16543870' },
+    '2023-02-10': { '1. open': '135.8300', '2. high': '136.7400', '3. low': '133.3400', '4. close': '135.6000', '5. volume': '22140989' }
+  };
+
+  // Extract labels and datasets from JSON data
+  const labels = Object.keys(jsonData).reverse();
+  const openPrices = [];
+  const closePrices = [];
+
+  for (let date in jsonData) {
+    openPrices.push(parseFloat(jsonData[date]['1. open']));
+    closePrices.push(parseFloat(jsonData[date]['4. close']));
+  }
+
+  // Define the data
+  const data = {
+    labels: labels,
+    datasets: [{
+      label: 'Open Price',
+      data: openPrices,
+      type: 'line',
+      backgroundColor: 'transparent',
+      borderColor: '#007bff',
+      pointBorderColor: '#007bff',
+      pointBackgroundColor: '#007bff',
+      fill: false
+      // pointHoverBackgroundColor: '#007bff',
+      // pointHoverBorderColor    : '#007bff'
+    },
+    {
+      label: 'Close Price',
+      data: closePrices,
+      type: 'line',
+      backgroundColor: 'tansparent',
+      borderColor: '#ced4da',
+      pointBorderColor: '#ced4da',
+      pointBackgroundColor: '#ced4da',
+      fill: false
+      // pointHoverBackgroundColor: '#ced4da',
+      // pointHoverBorderColor    : '#ced4da'
+    }]
+  };
+
+  // Define the options
+  const options = {
+    responsive: true,
+    title: {
+      display: true,
+      text: 'Stock Prices',
+      fontColor: 'white'
+    },
+    scales: {
+      yAxes: [{
+        ticks: {
+          beginAtZero: false,
+          fontColor: 'white'
+        }
+      }],
+      xAxes: [{
+        ticks: {
+          fontColor: 'white'
+        }
+      }]
+    },
+    legend: {
+      labels: {
+        fontColor: 'white'
+      }
+    }
+  };
+  var mode = 'index'
+  var intersect = true
+  var ticksStyle = {
+    fontColor: '#495057',
+    fontStyle: 'bold'
+  }
+  /*const options = {
+    title: {
+      display: true,
+      text: 'Stock Prices'
+    },
+    maintainAspectRatio: false,
+    tooltips: {
+      mode: mode,
+      intersect: intersect
+    },
+    hover: {
+      mode: mode,
+      intersect: intersect
+    },
+    legend: {
+      display: false
+    },
+    scales: {
+      yAxes: [{
+        // display: false,
+        gridLines: {
+          display: true,
+          lineWidth: '4px',
+          color: 'rgba(0, 0, 0, .2)',
+          zeroLineColor: 'transparent'
+        },
+        ticks: $.extend({
+          beginAtZero: true,
+          suggestedMax: 200
+        }, ticksStyle)
+      }],
+      xAxes: [{
+        display: true,
+        gridLines: {
+          display: false
+        },
+        ticks: ticksStyle
+      }]
+    }
+  };*/
+
+
+  // Create the chart
+  const ctx = document.getElementById('myChart').getContext('2d');
+  const myChart = new Chart(ctx, {
+    type: 'line',
+    data: data,
+    options: options
+  });
+ /* var myChart = new Chart(ctx, {
+            data: {
+              labels: ['18th', '20th', '22nd', '24th', '26th', '28th', '30th'],
+              datasets: [{
+                type: 'line',
+                data: [100, 120, 170, 167, 180, 177, 160],
+                backgroundColor: 'transparent',
+                borderColor: '#007bff',
+                pointBorderColor: '#007bff',
+                pointBackgroundColor: '#007bff',
+                fill: false
+                // pointHoverBackgroundColor: '#007bff',
+                // pointHoverBorderColor    : '#007bff'
+              },
+              {
+                type: 'line',
+                data: [60, 80, 70, 67, 80, 77, 100],
+                backgroundColor: 'tansparent',
+                borderColor: '#ced4da',
+                pointBorderColor: '#ced4da',
+                pointBackgroundColor: '#ced4da',
+                fill: false
+                // pointHoverBackgroundColor: '#ced4da',
+                // pointHoverBorderColor    : '#ced4da'
+              }]
+            },
+            options: {
+              maintainAspectRatio: false,
+              tooltips: {
+                mode: mode,
+                intersect: intersect
+              },
+              hover: {
+                mode: mode,
+                intersect: intersect
+              },
+              legend: {
+                display: false
+              },
+              scales: {
+                yAxes: [{
+                  // display: false,
+                  gridLines: {
+                    display: true,
+                    lineWidth: '4px',
+                    color: 'rgba(0, 0, 0, .2)',
+                    zeroLineColor: 'transparent'
+                  },
+                  ticks: $.extend({
+                    beginAtZero: true,
+                    suggestedMax: 200
+                  }, ticksStyle)
+                }],
+                xAxes: [{
+                  display: true,
+                  gridLines: {
+                    display: false
+                  },
+                  ticks: ticksStyle
+                }]
+              }
+            }
+          })*/
+
+</script>
 
 {% endblock javascripts %}
