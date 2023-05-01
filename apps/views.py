@@ -200,6 +200,7 @@ def get_stock_data():
     for symbol in symbols:
         url = f"https://yahoo-finance15.p.rapidapi.com/api/yahoo/qu/quote/{symbol}/financial-data"
         response = requests.get(url, headers=headers)
+        print(response.status_code)
         if response.status_code == 200: # Check if the request was successful
             data[symbol] = response.json() # Add the response data to the dictionary
         else:

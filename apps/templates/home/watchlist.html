@@ -11,13 +11,14 @@
     align-items: center;
     height: 33.33%;
   }
+
   #symbol-list li a {
     display: block;
     width: 100%;
     height: 100%;
     padding: 0.5rem;
-    background-color: #fff;
-    color: #343a40;
+    background-color: #343a40;
+    color: #fff;
     border: none;
     border-radius: 0;
     text-align: center;
@@ -25,9 +26,11 @@
     font-size: 1.2rem;
     cursor: pointer;
   }
-  #symbol-list li a:hover {
-    background-color: #343a40;
-    color: #fff;
+
+  #symbol-list li a:hover,
+  #symbol-list li a.selected {
+    background-color: rgba(255, 255, 255, 0.5);
+    color: #343a40;
   }
 </style>
 <!-- Google Font: Source Sans Pro -->
@@ -111,25 +114,14 @@
           </div>
         </div>
       </div>
-      <div class="row">
-        <div class="col-lg-8">
-          <div class="card" style="background-color: #343a40;">
-            <div class="card-body">
-              <div class="row h-100">
-                <div class="col-lg-4 my-auto">
-                  <ul id="symbol-list" class="h-100">
-                    <li><a href="#" onclick="updateChart('AAPL')">AAPL</a></li>
-                    <li><a href="#" onclick="updateChart('GOOG')">GOOG</a></li>
-                    <li><a href="#" onclick="updateChart('MSFT')">MSFT</a></li>
-                  </ul>
-                </div>
-                <div class="col-lg-8">
-                  <title>Stock Prices</title>
-                  <canvas id="myChart"></canvas>
-                </div>
-              </div>
-            </div>
-          </div>
+      <div class="row bg-dark d-flex">
+        <div class="col-lg-4 my-auto">
+          <ul id="symbol-list" class="h-100">
+          </ul>
+        </div>
+        <div class="col-lg-8 flex-grow-1">
+          <title>Stock Prices</title>
+          <canvas id="myChart" class="w-100"></canvas>
         </div>
       </div>
 
@@ -161,12 +153,51 @@
 
 <script>
 
+
   var getStockData = $.get('/add_to_watchlist');
   // Get the table body element
   getStockData.done(function (stocks) {
     const stockData = JSON.parse(stocks);
     const tableBody = document.querySelector("tbody");
     console.log(stockData)
+
+    // Select the list element by its ID
+    const symbolList = document.getElementById('symbol-list');
+
+    for (const [symbol] of Object.entries(stockData)) {
+      // Create a new list item element
+      const listItem = document.createElement('li');
+      const anchor = document.createElement('a');
+      anchor.href = '#';
+      anchor.textContent = symbol;
+      anchor.onclick = function (event) {
+        event.preventDefault();
+
+        // remove the selected class from all links
+        const symbolLinks = symbolList.getElementsByTagName('a');
+
+        // Create a new anchor element with an onclick function that passes the symbol to the updateChart function
+        for (var j = 0; j < symbolLinks.length; j++) {
+          symbolLinks[j].classList.remove('selected');
+        }
+
+        // add the selected class to the clicked link
+        event.target.classList.add('selected');
+
+        updateChart(symbol);
+      };
+
+      // Append the anchor element to the list item
+      listItem.appendChild(anchor);
+
+      // Append the list item to the list
+      symbolList.appendChild(listItem);
+    }
+
+    // add the selected class to the first link element in the list
+    const firstLink = symbolList.querySelector('a');
+    firstLink.classList.add('selected');
+    updateChart(firstLink.textContent);
 
     for (const [symbol, financialData] of Object.entries(stockData)) {
       console.log(symbol)
@@ -209,6 +240,40 @@
     };// End of For Loop
   });
 
+  var updateChart = (symbol) => {
+
+    console.log(symbol)
+
+
+
+    // replace the "demo" apikey below with your own key from https://www.alphavantage.co/support/#api-key
+
+
+    var api_key = '8X74CQALL5BWTHJE';
+
+
+
+    var url = 'https://www.alphavantage.co/query?function=TIME_SERIES_WEEKLY&symbol=' + symbol + '&apikey=' + api_key;
+    $.ajax({
+      url: url,
+      dataType: 'json',
+      success: function (data) {
+        // data is successfully parsed as a JSON object:
+
+        console.log(data);
+        var weekly_time_series = data['Weekly Time Series'];
+        console.log(weekly_time_series);
+        myChart.data = getSymbolWeeklyData(weekly_time_series);
+        myChart.update();
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.log('Error:', textStatus, errorThrown);
+      }
+    });
+
+
+  }
+
   const jsonData = {
     '2023-04-28': { '1. open': '125.5500', '2. high': '127.2500', '3. low': '124.5600', '4. close': '126.4100', '5. volume': '20644224' },
     '2023-04-21': { '1. open': '128.3000', '2. high': '130.9800', '3. low': '125.2700', '4. close': '125.7300', '5. volume': '30341128' },
@@ -224,45 +289,50 @@
     '2023-02-10': { '1. open': '135.8300', '2. high': '136.7400', '3. low': '133.3400', '4. close': '135.6000', '5. volume': '22140989' }
   };
 
-  // Extract labels and datasets from JSON data
-  const labels = Object.keys(jsonData).reverse();
-  const openPrices = [];
-  const closePrices = [];
+  var getSymbolWeeklyData = (jsonData) => {
+    // Extract labels and datasets from JSON data
+    const labels = Object.keys(jsonData).reverse();
+    const openPrices = [];
+    const closePrices = [];
 
-  for (let date in jsonData) {
-    openPrices.push(parseFloat(jsonData[date]['1. open']));
-    closePrices.push(parseFloat(jsonData[date]['4. close']));
+    for (let date in jsonData) {
+      openPrices.push(parseFloat(jsonData[date]['1. open']));
+      closePrices.push(parseFloat(jsonData[date]['4. close']));
+    }
+
+    // Define the data
+    const data = {
+      labels: labels,
+      datasets: [{
+        label: 'Open Price',
+        data: openPrices,
+        type: 'line',
+        backgroundColor: 'transparent',
+        borderColor: '#007bff',
+        pointBorderColor: '#007bff',
+        pointBackgroundColor: '#007bff',
+        fill: false,
+        pointRadius: 0,
+        // pointHoverBackgroundColor: '#007bff',
+        // pointHoverBorderColor    : '#007bff'
+      },
+      {
+        label: 'Close Price',
+        data: closePrices,
+        type: 'line',
+        pointRadius: 0,
+        borderColor: '#ced4da',
+        pointBorderColor: '#ced4da',
+        pointBackgroundColor: '#ced4da',
+        fill: true,
+        backgroundColor: 'rgba(255, 255, 255, 0.2)', // Set a slightly tr
+        // pointHoverBackgroundColor: '#ced4da',
+        // pointHoverBorderColor    : '#ced4da'
+      }]
+    };
+    return data;
+
   }
-
-  // Define the data
-  const data = {
-    labels: labels,
-    datasets: [{
-      label: 'Open Price',
-      data: openPrices,
-      type: 'line',
-      backgroundColor: 'transparent',
-      borderColor: '#007bff',
-      pointBorderColor: '#007bff',
-      pointBackgroundColor: '#007bff',
-      fill: false
-      // pointHoverBackgroundColor: '#007bff',
-      // pointHoverBorderColor    : '#007bff'
-    },
-    {
-      label: 'Close Price',
-      data: closePrices,
-      type: 'line',
-      backgroundColor: 'tansparent',
-      borderColor: '#ced4da',
-      pointBorderColor: '#ced4da',
-      pointBackgroundColor: '#ced4da',
-      fill: false
-      // pointHoverBackgroundColor: '#ced4da',
-      // pointHoverBorderColor    : '#ced4da'
-    }]
-  };
-
   // Define the options
   const options = {
     responsive: true,
@@ -342,72 +412,73 @@
   const ctx = document.getElementById('myChart').getContext('2d');
   const myChart = new Chart(ctx, {
     type: 'line',
-    data: data,
+    data: [],
+    //data:  getSymbolWeeklyData(jsonData),
     options: options
   });
  /* var myChart = new Chart(ctx, {
-            data: {
-              labels: ['18th', '20th', '22nd', '24th', '26th', '28th', '30th'],
-              datasets: [{
-                type: 'line',
-                data: [100, 120, 170, 167, 180, 177, 160],
-                backgroundColor: 'transparent',
-                borderColor: '#007bff',
-                pointBorderColor: '#007bff',
-                pointBackgroundColor: '#007bff',
-                fill: false
-                // pointHoverBackgroundColor: '#007bff',
-                // pointHoverBorderColor    : '#007bff'
-              },
-              {
-                type: 'line',
-                data: [60, 80, 70, 67, 80, 77, 100],
-                backgroundColor: 'tansparent',
-                borderColor: '#ced4da',
-                pointBorderColor: '#ced4da',
-                pointBackgroundColor: '#ced4da',
-                fill: false
-                // pointHoverBackgroundColor: '#ced4da',
-                // pointHoverBorderColor    : '#ced4da'
-              }]
-            },
-            options: {
-              maintainAspectRatio: false,
-              tooltips: {
-                mode: mode,
-                intersect: intersect
-              },
-              hover: {
-                mode: mode,
-                intersect: intersect
-              },
-              legend: {
-                display: false
-              },
-              scales: {
-                yAxes: [{
-                  // display: false,
-                  gridLines: {
-                    display: true,
-                    lineWidth: '4px',
-                    color: 'rgba(0, 0, 0, .2)',
-                    zeroLineColor: 'transparent'
-                  },
-                  ticks: $.extend({
-                    beginAtZero: true,
-                    suggestedMax: 200
-                  }, ticksStyle)
-                }],
-                xAxes: [{
-                  display: true,
-                  gridLines: {
-                    display: false
-                  },
-                  ticks: ticksStyle
-                }]
-              }
-            }
-          })*/
+                         data: {
+                           labels: ['18th', '20th', '22nd', '24th', '26th', '28th', '30th'],
+                           datasets: [{
+                             type: 'line',
+                             data: [100, 120, 170, 167, 180, 177, 160],
+                             backgroundColor: 'transparent',
+                             borderColor: '#007bff',
+                             pointBorderColor: '#007bff',
+                             pointBackgroundColor: '#007bff',
+                             fill: false
+                             // pointHoverBackgroundColor: '#007bff',
+                             // pointHoverBorderColor    : '#007bff'
+                           },
+                           {
+                             type: 'line',
+                             data: [60, 80, 70, 67, 80, 77, 100],
+                             backgroundColor: 'tansparent',
+                             borderColor: '#ced4da',
+                             pointBorderColor: '#ced4da',
+                             pointBackgroundColor: '#ced4da',
+                             fill: false
+                             // pointHoverBackgroundColor: '#ced4da',
+                             // pointHoverBorderColor    : '#ced4da'
+                           }]
+                         },
+                         options: {
+                           maintainAspectRatio: false,
+                           tooltips: {
+                             mode: mode,
+                             intersect: intersect
+                           },
+                           hover: {
+                             mode: mode,
+                             intersect: intersect
+                           },
+                           legend: {
+                             display: false
+                           },
+                           scales: {
+                             yAxes: [{
+                               // display: false,
+                               gridLines: {
+                                 display: true,
+                                 lineWidth: '4px',
+                                 color: 'rgba(0, 0, 0, .2)',
+                                 zeroLineColor: 'transparent'
+                               },
+                               ticks: $.extend({
+                                 beginAtZero: true,
+                                 suggestedMax: 200
+                               }, ticksStyle)
+                             }],
+                             xAxes: [{
+                               display: true,
+                               gridLines: {
+                                 display: false
+                               },
+                               ticks: ticksStyle
+                             }]
+                           }
+                         }
+                       })*/
 
 </script>
 
