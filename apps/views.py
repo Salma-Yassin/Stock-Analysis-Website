@@ -120,8 +120,7 @@ def editingprofile():
         if request.form.get('edit_account'):
             username = request.form.get('username_edit')
             email = request.form.get('email_edit')
-
-        
+    
             controller.editUser(id=user_id, name=username, email=email)
             return redirect(url_for('index'))
         
@@ -139,12 +138,36 @@ def editingprofile():
     else:
         return render_template('home/edit-profile.html', user=current_user)
     
-
+# Get Notifications
+@app.route('/Notfications', methods=['GET', 'POST'])
+def getNotfication():
+    if request.method == 'GET':
+        user_id = current_user.id
+        print(user_id)
+        count = db.session.query(Alerts).count()
+        if count == 0:
+          print(True)
+        else:
+          print(False)
+        return render_template('home/Notfications.html', values=Alerts.query.filter_by(user_id=user_id),notification_count=0)
+    
 
 @app.route('/index')
 @login_required
 def index():
-    return render_template('home/index.html', segment='index')
+    user_id = current_user.id
+
+    new_notification = Alerts(title='First Notification',content='is_working',state='not done',user_id= user_id)
+    db.session.add(new_notification)
+    db.session.commit()
+    notifications = Alerts.query.all()
+    notification_count = 0
+    for i in notifications:
+        print(i.state)
+        if i.state != 'done':
+            notification_count += 1
+    print(notification_count)
+    return render_template('home/index.html', segment='index',notification_count=notification_count)
 
 
 @app.route('/<template>')
