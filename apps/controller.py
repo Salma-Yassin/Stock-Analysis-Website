@@ -23,6 +23,12 @@ class controller:
         db.session.commit()
 
 
+    def deleteUserWatchListitem(id):
+        watchlistItem = UserWatchList.query.filter_by(id=id).first()
+        db.session.delete(watchlistItem)
+        db.session.commit()
+    
+
     def insertNotification(title,content,user_id):
         notification = Alerts(title=title, content=content,used_id=user_id)
         db.session.add(notification)

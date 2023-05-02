@@ -306,5 +306,22 @@ def add_to_watchlist():
     return jsonify({'status': 'success'})
   
 
+@app.route('/remove_from_watchlist', methods=['GET', 'POST']) # this is a dummy api that should be removed 
+def remove_from_watchlist():
+    if request.method == 'POST':
+        data = request.get_json()
+        required_symbol = list(data.keys())[0] 
+
+        watchList = UserWatchList.query.filter_by(user_id=current_user.id)
+        
+        for watchListItem in watchList:
+            financialData = json.loads(watchListItem.item)
+            symbol = list(financialData.keys())[0] 
+
+            if (required_symbol==symbol):
+                controller.deleteUserWatchListitem(watchListItem.id)
+
+    return jsonify({'status': 'success'})
+
 
 
