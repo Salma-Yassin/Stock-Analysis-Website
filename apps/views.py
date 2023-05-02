@@ -25,7 +25,9 @@ from .controller import controller
 from apps import app
 import random
 from datetime import datetime, timedelta
+from .generate_stock_data import generate_stock_data
 
+import requests
 
 @app.route('/')
 def route_default():
@@ -84,6 +86,14 @@ def register():
         db.session.add(new_user)
         db.session.commit()
         login_user(new_user, remember=True)
+
+        # creating notifications for first time log in 
+        user_id = current_user.id
+        new_notification = Alerts(title='First Notification',content='Welcome to the website',state='not done',user_id= user_id)
+        db.session.add(new_notification)
+        db.session.commit()
+
+
         return redirect(url_for('route_default'))
     
     return render_template('accounts/register.html')
@@ -152,22 +162,10 @@ def getNotfication():
         return render_template('home/Notfications.html', values=Alerts.query.filter_by(user_id=user_id),notification_count=0)
     
 
-@app.route('/index')
-@login_required
-def index():
-    user_id = current_user.id
-
-    new_notification = Alerts(title='First Notification',content='is_working',state='not done',user_id= user_id)
-    db.session.add(new_notification)
-    db.session.commit()
-    notifications = Alerts.query.all()
-    notification_count = 0
-    for i in notifications:
-        print(i.state)
-        if i.state != 'done':
-            notification_count += 1
-    print(notification_count)
-    return render_template('home/index.html', segment='index',notification_count=notification_count)
+# @app.route('/main-dashboard.html')
+# @login_required
+# def index():
+#     return render_template('home/main-dashboard.html', segment='index')
 
 
 @app.route('/<template>')
@@ -191,7 +189,6 @@ def route_template(template):
     except:
         return render_template('home/page-500.html'), 500
 
-
 # Helper - Extract current page name from request
 def get_segment(request):
 
@@ -208,9 +205,117 @@ def get_segment(request):
         return None
 
 
+
+
+# Get Notifications
+@app.route('/Notfications', methods=['GET', 'POST'])
+def getNotfication():
+    if request.method == 'GET':
+        user_id = current_user.id
+        notifications = Alerts.query.filter_by(user_id=user_id).all()
+        for notification in notifications:
+            notification.state = 'done'
+            db.session.commit()
+        return render_template('home/Notfications.html', values=Alerts.query.filter_by(user_id=user_id),notification_count=0)
+    
+
+@app.route('/get_notification_count')
+def get_notoification_count():
+    user_id = current_user.id
+    notifications = Alerts.query.filter_by(user_id=user_id).all()
+    notification_count = 0
+    for i in notifications:
+        print(i.state)
+        if i.state != 'done':
+            notification_count += 1
+    print(notification_count)
+    return jsonify(notification_count)
+    
+
+@app.route('/index')
+@app.route('/main-dashboard.html')
+@login_required
+def index():
+    stock_data = generate_stock_data()
+    with open("apps\dataMazen.json", "w") as f:
+        json.dump(stock_data, f)
+    return render_template('home/main-dashboard.html', segment='index')
+
+
 #----------- APIs---------#
+
+@app.route('/main-dashboard-data')
+def get_stock_data():
+    symbols = ['AAPL', 'AMZN', 'GOOGL', 'MSFT', 'TSLA', 'V', 'NFLX', 'DIS', 'NVDA', 'AMD', 'BA', 'GE', 'IBM', 'INTC', 'KO', 'PFE', 'XOM', 'CVX', 'T', 'VZ'] # List of symbols
+    headers = {
+        "content-type": "application/octet-stream",
+        "X-RapidAPI-Key": "c91a4b454emsh049aaf0bec003eep18bdf2jsn131c8d0ac347",
+        "X-RapidAPI-Host": "yahoo-finance15.p.rapidapi.com"
+    }
+    data = {} # Empty dictionary to store data for all symbols
+
+    for symbol in symbols:
+        url = f"https://yahoo-finance15.p.rapidapi.com/api/yahoo/qu/quote/{symbol}/financial-data"
+        response = requests.get(url, headers=headers)
+        print(response.status_code)
+        if response.status_code == 200: # Check if the request was successful
+            data[symbol] = response.json() # Add the response data to the dictionary
+        else:
+            print(f"Failed to get data for {symbol}") # Handle the error case
+
+    # Return the dictionary as JSON
+    return json.dumps(data)
+
 @app.route('/data') # this is a dummy api that should be removed 
 def get_chart_data():
    # generating random data for testing 
-   f = open("apps\data.json")
+   f = open("apps\dataMazen.json")
    return json.load(f)
+   
+
+@app.route('/add_to_watchlist', methods=['GET', 'POST']) # this is a dummy api that should be removed 
+def add_to_watchlist():
+   if request.method == 'GET':
+    f = open("apps\dataMazen.json")
+    all_data = json.load(f) #updated data 
+
+    watchList = UserWatchList.query.filter_by(user_id=current_user.id)
+    item = {}
+    for watchListItem in watchList:
+        
+        financialData = json.loads(watchListItem.item)
+        symbol = list(financialData.keys())[0] 
+
+        new_item = all_data[symbol]
+        print(new_item == financialData[symbol])
+        if new_item != financialData[symbol]:
+            item[symbol] = new_item
+            # update datebase 
+
+            # generate notification 
+            title = symbol + ' has changed'
+            content = 'The value for'+symbol+'has changed, you may want o check your watchlist for more details'
+            new_notification = Alerts(title = title ,content = content ,state='not done',user_id= current_user.id)
+            db.session.add(new_notification)
+            db.session.commit()
+
+
+        else:
+             item[symbol] = financialData[symbol]
+
+    return item
+  
+   elif request.method == 'POST':
+    data = request.get_json()
+    print(json.dumps(data))
+
+    controller.addUserWatchList(item =json.dumps(data) , user_id=current_user.id)
+    # redirect(url_for('login'))
+    # render_template('home/page-500.html')
+    # with open("apps/User_watchlist.json", "w") as f:
+    #   json.dump(data, f)
+    return jsonify({'status': 'success'})
+  
+
+
+

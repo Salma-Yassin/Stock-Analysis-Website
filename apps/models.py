@@ -16,19 +16,15 @@ class Users(db.Model, UserMixin):
     email = db.Column(db.String(150), unique=True)
     password = db.Column(db.String(150))
 
+@dataclass
+class UserWatchList(db.Model):
+    item : str
 
-class Notifications(db.Model):
-    __tablename__ = 'Notifications'
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100), nullable=False)
-    content = db.Column(db.Text, nullable=False)
-    created_at = db.Column(db.DateTime, nullable=False, default=func.now())
-    state = db.Column(db.String(10),nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('Users.id'), nullable=False)
+    item = db.Column(db.String, nullable=False)
+    user_id = db.Column(db.ForeignKey(Users.id, ondelete='CASCADE'),
+                        nullable=False)
 
-
-
-    #user = relationship('Users', backref='posts')
 
 class Alerts(db.Model):
     __tablename__ = 'Alerts'

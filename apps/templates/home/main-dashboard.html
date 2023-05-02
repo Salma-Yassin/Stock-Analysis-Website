@@ -1,0 +1,446 @@
+{% extends "layouts/base.html" %} {% block title %} Dashboard3 {% endblock %}
+
+<!-- Element injected in the BODY element -->
+{% block body_class %} sidebar-mini {% endblock body_class %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+
+<!-- Google Font: Source Sans Pro -->
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback"
+/>
+<!-- Font Awesome Icons -->
+<link
+  rel="stylesheet"
+  href="/static/assets/plugins/fontawesome-free/css/all.min.css"
+/>
+<!-- IonIcons -->
+<link
+  rel="stylesheet"
+  href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"
+/>
+<!-- Theme style -->
+<link rel="stylesheet" href="/static/assets/css/adminlte.min.css" />
+
+{% endblock stylesheets %} {% block content %}
+
+<!-- Content Wrapper. Contains page content -->
+<style>
+
+  .table-wrapper {
+    max-height: 500px; /* Set the maximum height for the table */
+    overflow-y: auto; /* Add a vertical scrollbar */
+  }
+
+  #news_card {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 10px;
+  padding: 10px;
+  width: 400px;
+}
+
+#news_card img {
+  max-width: 100%;
+}
+
+#news_card h2 {
+  font-size: 22px;
+  margin: 10px 0;
+}
+
+#news_card p {
+  font-size: 16px;
+  line-height: 1.5;
+  margin: 10px 0;
+}
+
+#news_card .card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  color: #666;
+  margin-top: 10px;
+}
+</style>
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0 text-dark">Dashboard</h1>
+        </div>
+        <!-- /.col -->
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active">Dashboard v3</li>
+          </ol>
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+  </div>
+  <!-- /.content-header -->
+
+  <!-- Main content -->
+  <div class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-3 col-6">
+          <!-- small box -->
+          <div class="small-box bg-info">
+            <div class="inner">
+              <h3>150</h3>
+
+              <p>New Orders</p>
+            </div>
+            <div class="icon">
+              <i class="ion ion-bag"></i>
+            </div>
+            <a href="#" class="small-box-footer"
+              >More info <i class="fas fa-arrow-circle-right"></i
+            ></a>
+          </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-3 col-6">
+          <!-- small box -->
+          <div class="small-box bg-success">
+            <div class="inner">
+              <h3>53<sup style="font-size: 20px">%</sup></h3>
+
+              <p>Bounce Rate</p>
+            </div>
+            <div class="icon">
+              <i class="ion ion-stats-bars"></i>
+            </div>
+            <a href="#" class="small-box-footer"
+              >More info <i class="fas fa-arrow-circle-right"></i
+            ></a>
+          </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-3 col-6">
+          <!-- small box -->
+          <div class="small-box bg-warning">
+            <div class="inner">
+              <h3>44</h3>
+
+              <p>User Registrations</p>
+            </div>
+            <div class="icon">
+              <i class="ion ion-person-add"></i>
+            </div>
+            <a href="#" class="small-box-footer"
+              >More info <i class="fas fa-arrow-circle-right"></i
+            ></a>
+          </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-3 col-6">
+          <!-- small box -->
+          <div class="small-box bg-danger">
+            <div class="inner">
+              <h3>65</h3>
+
+              <p>Unique Visitors</p>
+            </div>
+            <div class="icon">
+              <i class="ion ion-pie-graph"></i>
+            </div>
+            <a href="#" class="small-box-footer"
+              >More info <i class="fas fa-arrow-circle-right"></i
+            ></a>
+          </div>
+        </div>
+        <!-- ./col -->
+      </div>
+      <div class="row">
+        <div class="col-lg-12">
+          <!-- /.card -->
+
+          <div class="card">
+            <div class="card-header border-0">
+              <h3 class="card-title">Products</h3>
+              <div class="card-tools">
+                <a href="#" class="btn btn-tool btn-sm">
+                  <i class="fas fa-download"></i>
+                </a>
+                <a href="#" class="btn btn-tool btn-sm">
+                  <i class="fas fa-bars"></i>
+                </a>
+              </div>
+            </div>
+            <div id="stock-data"></div>
+            <div class="card-body table-responsive p-0 table-wrapper">
+              <table class="table table-striped table-valign-middle">
+                <thead>
+                  <tr>
+                    <th>Symbol</th>
+                    <th>Current Price</th>
+                    <th>Target High Price</th>
+                    <th>Target Low Price</th>
+                    <th>Target Mean Price</th>
+                    <th>Target Median Price</th>
+                    <th>Recommendation</th>
+                    <th>Add</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+          <!-- /.card -->
+        </div>
+        <!-- /.col-md-6 -->
+      </div>
+      <div class="row">
+      <div class="card" id="news_card">
+        <img
+          src="https://imageio.forbes.com/specials-images/imageserve/64505cf2c20e96ee0bfa3fe0/0x0.jpg?format=jpg&width=1200"
+          alt="Banner image"
+        />
+        <h2>Apple's Stock In Focus: More Profitable Than Banks</h2>
+        <p>
+          Investors looking for the "next big thing" will point toward companies
+          like Stripe, Sofi or Square as the leading fintech stocks. Meanwhile,
+          the next big thing to disrupt the financial sector may be sitting in
+          plain sight ... READ MORE ...
+        </p>
+        <div class="card-footer">
+          <span>Forbes</span>
+          <span>May 2, 2023</span>
+        </div>
+        <!-- /.row -->
+      </div>
+      <div class="card" id="news_card">
+        <img
+          src="https://imageio.forbes.com/specials-images/imageserve/64505cf2c20e96ee0bfa3fe0/0x0.jpg?format=jpg&width=1200"
+          alt="Banner image"
+        />
+        <h2>Apple's Stock In Focus: More Profitable Than Banks</h2>
+        <p>
+          Investors looking for the "next big thing" will point toward companies
+          like Stripe, Sofi or Square as the leading fintech stocks. Meanwhile,
+          the next big thing to disrupt the financial sector may be sitting in
+          plain sight ... READ MORE ...
+        </p>
+        <div class="card-footer">
+          <span>Forbes</span>
+          <span>May 2, 2023</span>
+        </div>
+        <!-- /.row -->
+      </div>
+      
+      </div>
+      <!-- /.container-fluid -->
+    </div>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  {% endblock content %}
+
+  <!-- Specific Page JS goes HERE  -->
+  {% block javascripts %}
+
+  <!-- jQuery -->
+  <script src="/static/assets/plugins/jquery/jquery.min.js"></script>
+  <!-- Bootstrap -->
+  <script src="/static/assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <!-- AdminLTE -->
+  <script src="/static/assets/js/adminlte.js"></script>
+
+  <!-- OPTIONAL SCRIPTS -->
+  <script src="/static/assets/plugins/chart.js/Chart.min.js"></script>
+  <script src="/static/assets/js/demo.js"></script>
+  <script src="/static/assets/js/pages/dashboard3.js"></script>
+
+  <script>
+    /*var getStockData = $.get('/main-dashboard-data');
+   // Get the table body element
+     const tableBody = document.querySelector("tbody");
+     getStockData.done(function (stocks) {
+     const stockData = JSON.parse(stocks);
+     const tableBody = document.querySelector("tbody");*/
+
+    var getStockData = $.get("/data");
+
+    // Get the table body element
+    getStockData.done(function (stockData) {
+      const tableBody = document.querySelector("tbody");
+      //stockData = JSON.parse(stockData);
+      for (const [symbol, financialData] of Object.entries(stockData)) {
+        const row = document.createElement("tr");
+
+        const symbolCell = document.createElement("td");
+        symbolCell.textContent = symbol;
+        row.appendChild(symbolCell);
+
+        const currentPriceCell = document.createElement("td");
+        currentPriceCell.textContent =
+          financialData.financialData.currentPrice.fmt;
+        row.appendChild(currentPriceCell);
+
+        const targetHighPriceCell = document.createElement("td");
+        targetHighPriceCell.textContent =
+          financialData.financialData.targetHighPrice.fmt;
+        row.appendChild(targetHighPriceCell);
+
+        const targetLowPriceCell = document.createElement("td");
+        targetLowPriceCell.textContent =
+          financialData.financialData.targetLowPrice.fmt;
+        row.appendChild(targetLowPriceCell);
+
+        const targetMeanPriceCell = document.createElement("td");
+        targetMeanPriceCell.textContent =
+          financialData.financialData.targetMeanPrice.fmt;
+        row.appendChild(targetMeanPriceCell);
+
+        const targetMedianPriceCell = document.createElement("td");
+        targetMedianPriceCell.textContent =
+          financialData.financialData.targetMedianPrice.fmt;
+        row.appendChild(targetMedianPriceCell);
+
+        const recommendationCell = document.createElement("td");
+        recommendationCell.appendChild(
+          document.createTextNode(financialData.financialData.recommendationKey)
+        );
+        row.appendChild(recommendationCell);
+
+        const addButtonCell = document.createElement("td");
+        const addButton = document.createElement("button");
+        addButton.textContent = "Add";
+        addButton.classList.add("btn", "btn-block", "btn-info");
+        addButton.setAttribute("type", "button");
+        addButtonCell.appendChild(addButton);
+        addButton.addEventListener("click", function () {
+          const requestData = {
+            [symbol]: financialData,
+          };
+          console.log(financialData.financialData);
+          console.log(requestData);
+          $.ajax({
+            type: "POST",
+            url: "/add_to_watchlist",
+            data: JSON.stringify(requestData),
+            contentType: "application/json",
+            success: function (response) {
+              console.log(response);
+            },
+          });
+          window.location.href = "/watchlist.html";
+        });
+        addButtonCell.appendChild(addButton);
+        row.appendChild(addButtonCell);
+
+        tableBody.appendChild(row);
+      }
+    });
+
+    const newsData = [
+      {
+        title: "Apple's Stock In Focus: More Profitable Than Banks",
+        url: "https://www.forbes.com/sites/bethkindig/2023/05/01/apples-stock-in-focus-more-profitable-than-banks/",
+        time_published: "20230502T020740",
+        authors: ["Beth Kindig"],
+        summary:
+          'Investors looking for the "next big thing" will point toward companies like Stripe, Sofi or Square as the leading fintech stocks. Meanwhile, the next big thing to disrupt the financial sector may be sitting in plain sight ... READ MORE ...',
+        banner_image:
+          "https://imageio.forbes.com/specials-images/imageserve/64505cf2c20e96ee0bfa3fe0/0x0.jpg?format=jpg&width=1200",
+        source: "Forbes",
+        category_within_source: "Money",
+        source_domain: "www.forbes.com",
+        topics: [
+          { topic: "Economy - Monetary", relevance_score: "0.310843" },
+          { topic: "Financial Markets", relevance_score: "0.999999" },
+          { topic: "Manufacturing", relevance_score: "0.333333" },
+          { topic: "Earnings", relevance_score: "0.998682" },
+          { topic: "Technology", relevance_score: "0.333333" },
+          { topic: "Finance", relevance_score: "0.333333" },
+        ],
+        overall_sentiment_score: 0.105069,
+        overall_sentiment_label: "Neutral",
+        ticker_sentiment: [
+          {
+            ticker: "MSFT",
+            relevance_score: "0.02162",
+            ticker_sentiment_score: "0.042175",
+            ticker_sentiment_label: "Neutral",
+          },
+          {
+            ticker: "SSNLF",
+            relevance_score: "0.02162",
+            ticker_sentiment_score: "0.115635",
+            ticker_sentiment_label: "Neutral",
+          },
+          {
+            ticker: "NVDA",
+            relevance_score: "0.043225",
+            ticker_sentiment_score: "0.042205",
+            ticker_sentiment_label: "Neutral",
+          },
+          {
+            ticker: "AAPL",
+            relevance_score: "0.583787",
+            ticker_sentiment_score: "0.216651",
+            ticker_sentiment_label: "Somewhat-Bullish",
+          },
+          {
+            ticker: "C",
+            relevance_score: "0.02162",
+            ticker_sentiment_score: "0.077991",
+            ticker_sentiment_label: "Neutral",
+          },
+          {
+            ticker: "BAC",
+            relevance_score: "0.02162",
+            ticker_sentiment_score: "0.107116",
+            ticker_sentiment_label: "Neutral",
+          },
+          {
+            ticker: "MA",
+            relevance_score: "0.02162",
+            ticker_sentiment_score: "0.068083",
+            ticker_sentiment_label: "Neutral",
+          },
+          {
+            ticker: "JPM",
+            relevance_score: "0.043225",
+            ticker_sentiment_score: "0.086055",
+            ticker_sentiment_label: "Neutral",
+          },
+          {
+            ticker: "CRYPTO:BTC",
+            relevance_score: "0.043225",
+            ticker_sentiment_score: "0.042205",
+            ticker_sentiment_label: "Neutral",
+          },
+        ],
+      },
+    ];
+
+    const card = document.querySelector(".card");
+    const cardImg = card.querySelector("img");
+    const cardTitle = card.querySelector("h2");
+    const cardText = card.querySelector("p");
+    const cardSource = card.querySelector(".card-footer span:first-child");
+    const cardDate = card.querySelector(".card-footer span:last-child");
+
+    cardImg.src = newsData[0].banner_image;
+    cardTitle.textContent = newsData[0].title;
+    cardText.textContent = newsData[0].summary;
+    cardSource.textContent = newsData[0].source;
+    cardDate.textContent = new Date(newsData[0].time_published).toDateString();
+  </script>
+
+  {% endblock javascripts %}
+</div>
