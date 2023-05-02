@@ -232,6 +232,24 @@ def index():
 
 
 #----------- APIs---------#
+@app.route('/main-dashboard-news-data')
+def get_news_data():
+
+    news_data = {}
+    symbols = ['AAPL', 'AMZN', 'TSLA']
+    apikey = "8X74CQALL5BWTHJE"
+
+    for symbol in symbols:
+        url = f"https://www.alphavantage.co/query?function=NEWS_SENTIMENT&tickers={symbol}&apikey={apikey}"
+        r = requests.get(url)
+        
+        if r.status_code == 200: # Check if the request was successful
+            news_data[symbol] = r.json()['feed'][0] # Add the response data to the dictionary
+        else:
+            print(f"Failed to get data for {symbol}") # Handle the error case
+
+    # Return the dictionary as JSON
+    return json.dumps(news_data)
 
 @app.route('/main-dashboard-data')
 def get_stock_data():
