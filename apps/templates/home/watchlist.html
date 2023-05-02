@@ -113,6 +113,7 @@
                     <th>Target Mean Price</th>
                     <th>Target Median Price</th>
                     <th>Recommendation</th>
+                    <th>Delete</th>
                   </tr>
                 </thead>
                 <tbody></tbody>
@@ -158,7 +159,18 @@
 
 <script>
   function onRefrsh() {
+
+    $.ajax({
+            type: "POST",
+            url: '/update_data',
+            data: JSON.stringify([]),
+            contentType: "application/json",
+            success: function (response) {
+              console.log(response);
+            },
+          });
     location.reload();
+    
   }
 
   var getStockData = $.get("/add_to_watchlist");
@@ -246,6 +258,34 @@
         document.createTextNode(financialData.financialData.recommendationKey)
       );
       row.appendChild(recommendationCell);
+
+      const addButtonCell = document.createElement("td");
+        const addButton = document.createElement("button");
+        addButton.textContent = "Delete";
+        addButton.classList.add("btn", "btn-block", "btn-info");
+        addButton.setAttribute("type", "button");
+        addButtonCell.appendChild(addButton);
+        addButton.addEventListener("click", function () {
+          const requestData = {
+            [symbol]: financialData,
+          };
+          console.log(financialData.financialData);
+          console.log(requestData);
+          $.ajax({
+            type: "POST",
+            url: "/remove_from_watchlist",
+            data: JSON.stringify(requestData),
+            contentType: "application/json",
+            success: function (response) {
+              console.log(response);
+            },
+          });
+          window.location.href = "/watchlist.html";
+        });
+        addButtonCell.appendChild(addButton);
+        row.appendChild(addButtonCell);
+
+      
 
       // Add the row to the table body
       tableBody.appendChild(row);
