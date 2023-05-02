@@ -182,7 +182,8 @@
    const stockData = JSON.parse(stocks);
    const tableBody = document.querySelector("tbody");*/
 
-  var getStockData = $.get('/main-dashboard-data');
+ var getStockData = $.get('/data');
+ 
   // Get the table body element
   getStockData.done(function (stockData) {
     const tableBody = document.querySelector("tbody");

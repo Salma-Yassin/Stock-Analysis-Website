@@ -85,6 +85,22 @@ def register():
         db.session.add(new_user)
         db.session.commit()
         login_user(new_user, remember=True)
+
+        # creating notifications for first time log in 
+        user_id = current_user.id
+        new_notification = Alerts(title='First Notification',content='Welcome to the website',state='not done',user_id= user_id)
+        db.session.add(new_notification)
+        db.session.commit()
+
+        new_notification = Alerts(title='Second Notification',content='AAPL stock has changed',state='not done',user_id= user_id)
+        db.session.add(new_notification)
+        db.session.commit()
+
+        new_notification = Alerts(title='Third Notification',content='You can add more items to your whachlist',state='not done',user_id= user_id)
+        db.session.add(new_notification)
+        db.session.commit()
+
+
         return redirect(url_for('route_default'))
     
     return render_template('accounts/register.html')
@@ -142,10 +158,10 @@ def editingprofile():
     
 
 
-@app.route('/main-dashboard.html')
-@login_required
-def index():
-    return render_template('home/main-dashboard.html', segment='index')
+# @app.route('/main-dashboard.html')
+# @login_required
+# def index():
+#     return render_template('home/main-dashboard.html', segment='index')
 
 
 @app.route('/<template>')
@@ -183,7 +199,42 @@ def get_segment(request):
 
     except:
         return None
+
+
+
+
+# Get Notifications
+@app.route('/Notfications', methods=['GET', 'POST'])
+def getNotfication():
+    if request.method == 'GET':
+        user_id = current_user.id
+        notifications = Alerts.query.filter_by(user_id=user_id).all()
+        for notification in notifications:
+            notification.state = 'done'
+            db.session.commit()
+        return render_template('home/Notfications.html', values=Alerts.query.filter_by(user_id=user_id),notification_count=0)
     
+
+@app.route('/get_notification_count')
+def get_notoification_count():
+    user_id = current_user.id
+    notifications = Alerts.query.filter_by(user_id=user_id).all()
+    notification_count = 0
+    for i in notifications:
+        print(i.state)
+        if i.state != 'done':
+            notification_count += 1
+    print(notification_count)
+    return jsonify(notification_count)
+    
+
+@app.route('/index')
+@app.route('/main-dashboard.html')
+@login_required
+def index():
+    user_id = current_user.id
+    return render_template('home/main-dashboard.html', segment='index')
+
 
 #----------- APIs---------#
 

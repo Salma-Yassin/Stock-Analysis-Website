@@ -1,0 +1,121 @@
+{% extends "layouts/base.html" %} {% block title %} Dashboard2 {% endblock %}
+
+<!-- Element injected in the BODY element -->
+{% block body_class %} sidebar-mini layout-fixed layout-navbar-fixed
+layout-footer-fixed {% endblock body_class %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+
+<!-- Google Font: Source Sans Pro -->
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback"
+/>
+<!-- Font Awesome Icons -->
+<link
+  rel="stylesheet"
+  href="/static/assets/plugins/fontawesome-free/css/all.min.css"
+/>
+<!-- overlayScrollbars -->
+<link
+  rel="stylesheet"
+  href="/static/assets/plugins/overlayScrollbars/css/OverlayScrollbars.min.css"
+/>
+<!-- Theme style -->
+<link rel="stylesheet" href="/static/assets/css/adminlte.min.css" />
+
+{% endblock stylesheets %} {% block content %}
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0 text-dark">Notifications</h1>
+        </div>
+        <!-- /.col -->
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active">Notifications</li>
+          </ol>
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+  </div>
+  <!-- /.content-header -->
+
+  <!-- Main content -->
+  <section class="content">
+    <div class="card">
+      <!-- /.card-header -->
+      <div class="card-body p-0 m-0">
+        <ul class="products-list product-list-in-card m-0 p-0">
+          {% for item in values%}
+          <li class="item">
+            <div class="product-info">
+              <a href="javascript:void({{item.id}})" class="product-title">
+                {{ item.title}}
+                <div class="card-tools float-right">
+                  <button type="button" class="btn btn-tool">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+              </a>
+              <span class="product-description"> {{item.content}} </span>
+            </div>
+          </li>
+          {% endfor %}
+
+          <!-- /.item -->
+        </ul>
+      </div>
+      <!-- /.card-body -->
+      <div class="card-footer text-center">
+        <a href="javascript:void(0)" class="uppercase">Show more results</a>
+      </div>
+      <!-- /.card-footer -->
+    </div>
+  </section>
+
+  <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+<!-- REQUIRED SCRIPTS -->
+<!-- jQuery -->
+<script src="/static/assets/plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap -->
+<script src="/static/assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- overlayScrollbars -->
+<script src="/static/assets/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+<!-- AdminLTE App -->
+<script src="/static/assets/js/adminlte.js"></script>
+
+<!-- OPTIONAL SCRIPTS -->
+<script src="/static/assets/js/demo.js"></script>
+
+<!-- PAGE PLUGINS -->
+<!-- jQuery Mapael -->
+<script src="/static/assets/plugins/jquery-mousewheel/jquery.mousewheel.js"></script>
+<script src="/static/assets/plugins/raphael/raphael.min.js"></script>
+<script src="/static/assets/plugins/jquery-mapael/jquery.mapael.min.js"></script>
+<script src="/static/assets/plugins/jquery-mapael/maps/usa_states.min.js"></script>
+<!-- ChartJS -->
+<script src="/static/assets/plugins/chart.js/Chart.min.js"></script>
+
+<!-- PAGE SCRIPTS -->
+<script src="/static/assets/js/pages/dashboard2.js"></script>
+
+{% endblock javascripts %}
