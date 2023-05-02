@@ -82,6 +82,17 @@ def register():
                                    success=False)
 
 
+        if email == "":
+            return render_template('accounts/register.html',
+                                   msg='Email field can not be empty',
+                                   success=False)
+        
+        if username =="" :
+            return render_template('accounts/register.html',
+                                   msg='Username field can not be empty',
+                                   success=False)
+
+        
         new_user = Users(username = username ,email=email, password= generate_password_hash(password, method='sha256')) 
         db.session.add(new_user)
         db.session.commit()
