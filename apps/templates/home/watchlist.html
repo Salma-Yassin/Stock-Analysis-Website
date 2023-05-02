@@ -34,12 +34,20 @@
   }
 </style>
 <!-- Google Font: Source Sans Pro -->
-<link rel="stylesheet"
-  href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback" />
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback"
+/>
 <!-- Font Awesome Icons -->
-<link rel="stylesheet" href="/static/assets/plugins/fontawesome-free/css/all.min.css" />
+<link
+  rel="stylesheet"
+  href="/static/assets/plugins/fontawesome-free/css/all.min.css"
+/>
 <!-- IonIcons -->
-<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" />
+<link
+  rel="stylesheet"
+  href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"
+/>
 <!-- Theme style -->
 <link rel="stylesheet" href="/static/assets/css/adminlte.min.css" />
 
@@ -62,7 +70,7 @@
           </ol>
         </div>
         <div class="offset-sm-2 col-sm-10 text-right">
-          <a class="btn btn-app" onclick="location.reload();">
+          <a class="btn btn-app" onclick="onRefrsh()">
             <i class="fas fa-sync-alt"></i> Refresh
           </a>
         </div>
@@ -107,8 +115,7 @@
                     <th>Recommendation</th>
                   </tr>
                 </thead>
-                <tbody>
-                </tbody>
+                <tbody></tbody>
               </table>
             </div>
           </div>
@@ -116,8 +123,7 @@
       </div>
       <div class="row bg-dark d-flex">
         <div class="col-lg-4 my-auto">
-          <ul id="symbol-list" class="h-100">
-          </ul>
+          <ul id="symbol-list" class="h-100"></ul>
         </div>
         <div class="col-lg-8 flex-grow-1">
           <title>Stock Prices</title>
@@ -132,7 +138,6 @@
   <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
-
 
 {% endblock content %}
 
@@ -152,37 +157,39 @@
 <script src="/static/assets/js/pages/dashboard3.js"></script>
 
 <script>
+  function onRefrsh() {
+    location.reload();
+  }
 
-
-  var getStockData = $.get('/add_to_watchlist');
+  var getStockData = $.get("/add_to_watchlist");
   // Get the table body element
-  getStockData.done(function (stocks) {
-    const stockData = JSON.parse(stocks);
+  getStockData.done(function (stockData) {
+    //const stockData = JSON.parse(stocks);
     const tableBody = document.querySelector("tbody");
-    console.log(stockData)
+    console.log(stockData);
 
     // Select the list element by its ID
-    const symbolList = document.getElementById('symbol-list');
+    const symbolList = document.getElementById("symbol-list");
 
     for (const [symbol] of Object.entries(stockData)) {
       // Create a new list item element
-      const listItem = document.createElement('li');
-      const anchor = document.createElement('a');
-      anchor.href = '#';
+      const listItem = document.createElement("li");
+      const anchor = document.createElement("a");
+      anchor.href = "#";
       anchor.textContent = symbol;
       anchor.onclick = function (event) {
         event.preventDefault();
 
         // remove the selected class from all links
-        const symbolLinks = symbolList.getElementsByTagName('a');
+        const symbolLinks = symbolList.getElementsByTagName("a");
 
         // Create a new anchor element with an onclick function that passes the symbol to the updateChart function
         for (var j = 0; j < symbolLinks.length; j++) {
-          symbolLinks[j].classList.remove('selected');
+          symbolLinks[j].classList.remove("selected");
         }
 
         // add the selected class to the clicked link
-        event.target.classList.add('selected');
+        event.target.classList.add("selected");
 
         updateChart(symbol);
       };
@@ -195,13 +202,13 @@
     }
 
     // add the selected class to the first link element in the list
-    const firstLink = symbolList.querySelector('a');
-    firstLink.classList.add('selected');
+    const firstLink = symbolList.querySelector("a");
+    firstLink.classList.add("selected");
     updateChart(firstLink.textContent);
 
     for (const [symbol, financialData] of Object.entries(stockData)) {
-      console.log(symbol)
-      console.log(financialData)
+      console.log(symbol);
+      console.log(financialData);
       const row = document.createElement("tr");
 
       const symbolCell = document.createElement("td");
@@ -209,84 +216,157 @@
       row.appendChild(symbolCell);
 
       const currentPriceCell = document.createElement("td");
-      currentPriceCell.textContent = financialData.financialData.currentPrice.fmt;
+      currentPriceCell.textContent =
+        financialData.financialData.currentPrice.fmt;
       row.appendChild(currentPriceCell);
 
       const targetHighPriceCell = document.createElement("td");
-      targetHighPriceCell.textContent = financialData.financialData.targetHighPrice.fmt;
+      targetHighPriceCell.textContent =
+        financialData.financialData.targetHighPrice.fmt;
       row.appendChild(targetHighPriceCell);
 
       const targetLowPriceCell = document.createElement("td");
-      targetLowPriceCell.textContent = financialData.financialData.targetLowPrice.fmt;
+      targetLowPriceCell.textContent =
+        financialData.financialData.targetLowPrice.fmt;
       row.appendChild(targetLowPriceCell);
 
       const targetMeanPriceCell = document.createElement("td");
-      targetMeanPriceCell.textContent = financialData.financialData.targetMeanPrice.fmt;
+      targetMeanPriceCell.textContent =
+        financialData.financialData.targetMeanPrice.fmt;
       row.appendChild(targetMeanPriceCell);
 
       const targetMedianPriceCell = document.createElement("td");
-      targetMedianPriceCell.textContent = financialData.financialData.targetMedianPrice.fmt;
+      targetMedianPriceCell.textContent =
+        financialData.financialData.targetMedianPrice.fmt;
       row.appendChild(targetMedianPriceCell);
 
       // Create the recommendation cell
       const recommendationCell = document.createElement("td");
-      recommendationCell.appendChild(document.createTextNode(financialData.financialData.recommendationKey));
+      recommendationCell.appendChild(
+        document.createTextNode(financialData.financialData.recommendationKey)
+      );
       row.appendChild(recommendationCell);
-
-
 
       // Add the row to the table body
       tableBody.appendChild(row);
-    };// End of For Loop
+    } // End of For Loop
   });
 
   var updateChart = (symbol) => {
-
-    console.log(symbol)
-
-
+    console.log(symbol);
 
     // replace the "demo" apikey below with your own key from https://www.alphavantage.co/support/#api-key
 
+    var api_key = "8X74CQALL5BWTHJE";
 
-    var api_key = '8X74CQALL5BWTHJE';
-
-
-
-    var url = 'https://www.alphavantage.co/query?function=TIME_SERIES_WEEKLY&symbol=' + symbol + '&apikey=' + api_key;
+    var url =
+      "https://www.alphavantage.co/query?function=TIME_SERIES_WEEKLY&symbol=" +
+      symbol +
+      "&apikey=" +
+      api_key;
     $.ajax({
       url: url,
-      dataType: 'json',
+      dataType: "json",
       success: function (data) {
         // data is successfully parsed as a JSON object:
 
         console.log(data);
-        var weekly_time_series = data['Weekly Time Series'];
+        var weekly_time_series = data["Weekly Time Series"];
         console.log(weekly_time_series);
         myChart.data = getSymbolWeeklyData(weekly_time_series);
         myChart.update();
       },
       error: function (jqXHR, textStatus, errorThrown) {
-        console.log('Error:', textStatus, errorThrown);
-      }
+        console.log("Error:", textStatus, errorThrown);
+      },
     });
-
-
-  }
+  };
 
   const jsonData = {
-    '2023-04-28': { '1. open': '125.5500', '2. high': '127.2500', '3. low': '124.5600', '4. close': '126.4100', '5. volume': '20644224' },
-    '2023-04-21': { '1. open': '128.3000', '2. high': '130.9800', '3. low': '125.2700', '4. close': '125.7300', '5. volume': '30341128' },
-    '2023-04-14': { '1. open': '129.8300', '2. high': '131.1050', '3. low': '126.0000', '4. close': '128.1400', '5. volume': '19506500' },
-    '2023-04-06': { '1. open': '130.9700', '2. high': '132.6100', '3. low': '130.3150', '4. close': '130.5000', '5. volume': '13172262' },
-    '2023-03-31': { '1. open': '126.4700', '2. high': '131.4800', '3. low': '126.4700', '4. close': '131.0900', '5. volume': '20779522' },
-    '2023-03-24': { '1. open': '124.3100', '2. high': '127.2150', '3. low': '122.6000', '4. close': '125.2900', '5. volume': '20458253' },
-    '2023-03-17': { '1. open': '125.1500', '2. high': '128.1900', '3. low': '121.7100', '4. close': '123.6900', '5. volume': '66132690' },
-    '2023-03-10': { '1. open': '129.6400', '2. high': '130.8600', '3. low': '125.1300', '4. close': '125.4500', '5. volume': '20761401' },
-    '2023-03-03': { '1. open': '131.4200', '2. high': '131.8700', '3. low': '127.7100', '4. close': '129.6400', '5. volume': '17865677' },
-    '2023-02-24': { '1. open': '134.0000', '2. high': '134.3850', '3. low': '128.8600', '4. close': '130.5700', '5. volume': '14198950' },
-    '2023-02-17': { '1. open': '136.0000', '2. high': '137.3900', '3. low': '133.8900', '4. close': '135.0200', '5. volume': '16543870' },
-    '2023-02-10': { '1. open': '135.8300', '2. high': '136.7400', '3. low': '133.3400', '4. close': '135.6000', '5. volume': '22140989' }
+    "2023-04-28": {
+      "1. open": "125.5500",
+      "2. high": "127.2500",
+      "3. low": "124.5600",
+      "4. close": "126.4100",
+      "5. volume": "20644224",
+    },
+    "2023-04-21": {
+      "1. open": "128.3000",
+      "2. high": "130.9800",
+      "3. low": "125.2700",
+      "4. close": "125.7300",
+      "5. volume": "30341128",
+    },
+    "2023-04-14": {
+      "1. open": "129.8300",
+      "2. high": "131.1050",
+      "3. low": "126.0000",
+      "4. close": "128.1400",
+      "5. volume": "19506500",
+    },
+    "2023-04-06": {
+      "1. open": "130.9700",
+      "2. high": "132.6100",
+      "3. low": "130.3150",
+      "4. close": "130.5000",
+      "5. volume": "13172262",
+    },
+    "2023-03-31": {
+      "1. open": "126.4700",
+      "2. high": "131.4800",
+      "3. low": "126.4700",
+      "4. close": "131.0900",
+      "5. volume": "20779522",
+    },
+    "2023-03-24": {
+      "1. open": "124.3100",
+      "2. high": "127.2150",
+      "3. low": "122.6000",
+      "4. close": "125.2900",
+      "5. volume": "20458253",
+    },
+    "2023-03-17": {
+      "1. open": "125.1500",
+      "2. high": "128.1900",
+      "3. low": "121.7100",
+      "4. close": "123.6900",
+      "5. volume": "66132690",
+    },
+    "2023-03-10": {
+      "1. open": "129.6400",
+      "2. high": "130.8600",
+      "3. low": "125.1300",
+      "4. close": "125.4500",
+      "5. volume": "20761401",
+    },
+    "2023-03-03": {
+      "1. open": "131.4200",
+      "2. high": "131.8700",
+      "3. low": "127.7100",
+      "4. close": "129.6400",
+      "5. volume": "17865677",
+    },
+    "2023-02-24": {
+      "1. open": "134.0000",
+      "2. high": "134.3850",
+      "3. low": "128.8600",
+      "4. close": "130.5700",
+      "5. volume": "14198950",
+    },
+    "2023-02-17": {
+      "1. open": "136.0000",
+      "2. high": "137.3900",
+      "3. low": "133.8900",
+      "4. close": "135.0200",
+      "5. volume": "16543870",
+    },
+    "2023-02-10": {
+      "1. open": "135.8300",
+      "2. high": "136.7400",
+      "3. low": "133.3400",
+      "4. close": "135.6000",
+      "5. volume": "22140989",
+    },
   };
 
   var getSymbolWeeklyData = (jsonData) => {
@@ -296,76 +376,81 @@
     const closePrices = [];
 
     for (let date in jsonData) {
-      openPrices.push(parseFloat(jsonData[date]['1. open']));
-      closePrices.push(parseFloat(jsonData[date]['4. close']));
+      openPrices.push(parseFloat(jsonData[date]["1. open"]));
+      closePrices.push(parseFloat(jsonData[date]["4. close"]));
     }
 
     // Define the data
     const data = {
       labels: labels,
-      datasets: [{
-        label: 'Open Price',
-        data: openPrices,
-        type: 'line',
-        backgroundColor: 'transparent',
-        borderColor: '#007bff',
-        pointBorderColor: '#007bff',
-        pointBackgroundColor: '#007bff',
-        fill: false,
-        pointRadius: 0,
-        // pointHoverBackgroundColor: '#007bff',
-        // pointHoverBorderColor    : '#007bff'
-      },
-      {
-        label: 'Close Price',
-        data: closePrices,
-        type: 'line',
-        pointRadius: 0,
-        borderColor: '#ced4da',
-        pointBorderColor: '#ced4da',
-        pointBackgroundColor: '#ced4da',
-        fill: true,
-        backgroundColor: 'rgba(255, 255, 255, 0.2)', // Set a slightly tr
-        // pointHoverBackgroundColor: '#ced4da',
-        // pointHoverBorderColor    : '#ced4da'
-      }]
+      datasets: [
+        {
+          label: "Open Price",
+          data: openPrices,
+          type: "line",
+          backgroundColor: "transparent",
+          borderColor: "#007bff",
+          pointBorderColor: "#007bff",
+          pointBackgroundColor: "#007bff",
+          fill: false,
+          pointRadius: 0,
+          // pointHoverBackgroundColor: '#007bff',
+          // pointHoverBorderColor    : '#007bff'
+        },
+        {
+          label: "Close Price",
+          data: closePrices,
+          type: "line",
+          pointRadius: 0,
+          borderColor: "#ced4da",
+          pointBorderColor: "#ced4da",
+          pointBackgroundColor: "#ced4da",
+          fill: true,
+          backgroundColor: "rgba(255, 255, 255, 0.2)", // Set a slightly tr
+          // pointHoverBackgroundColor: '#ced4da',
+          // pointHoverBorderColor    : '#ced4da'
+        },
+      ],
     };
     return data;
-
-  }
+  };
   // Define the options
   const options = {
     responsive: true,
     title: {
       display: true,
-      text: 'Stock Prices',
-      fontColor: 'white'
+      text: "Stock Prices",
+      fontColor: "white",
     },
     scales: {
-      yAxes: [{
-        ticks: {
-          beginAtZero: false,
-          fontColor: 'white'
-        }
-      }],
-      xAxes: [{
-        ticks: {
-          fontColor: 'white'
-        }
-      }]
+      yAxes: [
+        {
+          ticks: {
+            beginAtZero: false,
+            fontColor: "white",
+          },
+        },
+      ],
+      xAxes: [
+        {
+          ticks: {
+            fontColor: "white",
+          },
+        },
+      ],
     },
     legend: {
       labels: {
-        fontColor: 'white'
-      }
-    }
+        fontColor: "white",
+      },
+    },
   };
-  var mode = 'index'
-  var intersect = true
+  var mode = "index";
+  var intersect = true;
   var ticksStyle = {
-    fontColor: '#495057',
-    fontStyle: 'bold'
-  }
+    fontColor: "#495057",
+    fontStyle: "bold",
+  };
   /*const options = {
     title: {
       display: true,
@@ -407,16 +492,15 @@
     }
   };*/
 
-
   // Create the chart
-  const ctx = document.getElementById('myChart').getContext('2d');
+  const ctx = document.getElementById("myChart").getContext("2d");
   const myChart = new Chart(ctx, {
-    type: 'line',
+    type: "line",
     data: [],
     //data:  getSymbolWeeklyData(jsonData),
-    options: options
+    options: options,
   });
- /* var myChart = new Chart(ctx, {
+  /* var myChart = new Chart(ctx, {
                          data: {
                            labels: ['18th', '20th', '22nd', '24th', '26th', '28th', '30th'],
                            datasets: [{
@@ -479,7 +563,6 @@
                            }
                          }
                        })*/
-
 </script>
 
 {% endblock javascripts %}

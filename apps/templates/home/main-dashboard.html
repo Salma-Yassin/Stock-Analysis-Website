@@ -19,6 +19,12 @@
 {% endblock stylesheets %} {% block content %}
 
 <!-- Content Wrapper. Contains page content -->
+<style>
+  .table-wrapper {
+    max-height: 500px; /* Set the maximum height for the table */
+    overflow-y: auto; /* Add a vertical scrollbar */
+  }
+</style>
 <div class="content-wrapper">
   <!-- Content Header (Page header) -->
   <div class="content-header">
@@ -124,7 +130,7 @@
               </div>
             </div>
             <div id="stock-data"></div>
-            <div class="card-body table-responsive p-0">
+            <div class="card-body table-responsive p-0 table-wrapper">
               <table class="table table-striped table-valign-middle">
                 <thead>
                   <tr>
@@ -187,7 +193,7 @@
   // Get the table body element
   getStockData.done(function (stockData) {
     const tableBody = document.querySelector("tbody");
-
+    //stockData = JSON.parse(stockData);
     for (const [symbol, financialData] of Object.entries(stockData)) {
       const row = document.createElement("tr");
 
@@ -247,7 +253,8 @@
 
       tableBody.appendChild(row);
     }
-  });
+
+});
 </script>
 
 {% endblock javascripts %}

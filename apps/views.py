@@ -25,6 +25,7 @@ from .controller import controller
 from apps import app
 import random
 from datetime import datetime, timedelta
+from .generate_stock_data import generate_stock_data
 
 import requests
 
@@ -89,14 +90,6 @@ def register():
         # creating notifications for first time log in 
         user_id = current_user.id
         new_notification = Alerts(title='First Notification',content='Welcome to the website',state='not done',user_id= user_id)
-        db.session.add(new_notification)
-        db.session.commit()
-
-        new_notification = Alerts(title='Second Notification',content='AAPL stock has changed',state='not done',user_id= user_id)
-        db.session.add(new_notification)
-        db.session.commit()
-
-        new_notification = Alerts(title='Third Notification',content='You can add more items to your whachlist',state='not done',user_id= user_id)
         db.session.add(new_notification)
         db.session.commit()
 
@@ -232,7 +225,9 @@ def get_notoification_count():
 @app.route('/main-dashboard.html')
 @login_required
 def index():
-    user_id = current_user.id
+    stock_data = generate_stock_data()
+    with open("apps\dataMazen.json", "w") as f:
+        json.dump(stock_data, f)
     return render_template('home/main-dashboard.html', segment='index')
 
 
@@ -265,28 +260,39 @@ def get_chart_data():
    # generating random data for testing 
    f = open("apps\dataMazen.json")
    return json.load(f)
+   
 
 @app.route('/add_to_watchlist', methods=['GET', 'POST']) # this is a dummy api that should be removed 
 def add_to_watchlist():
    if request.method == 'GET':
+    f = open("apps\dataMazen.json")
+    all_data = json.load(f) #updated data 
+
     watchList = UserWatchList.query.filter_by(user_id=current_user.id)
     item = {}
     for watchListItem in watchList:
         
         financialData = json.loads(watchListItem.item)
         symbol = list(financialData.keys())[0] 
-        
-        item[symbol] = financialData[symbol]
 
-        # print(watchListItem.item)
-        # print(symbol)
-        # print(financialData[symbol])
-        
-    
-    return json.dumps(item)
-    # with open("apps/User_watchlist.json") as f:
-    #    data = json.load(f)
-    # return data
+        new_item = all_data[symbol]
+        print(new_item == financialData[symbol])
+        if new_item != financialData[symbol]:
+            item[symbol] = new_item
+            # update datebase 
+
+            # generate notification 
+            title = symbol + ' has changed'
+            content = 'The value for'+symbol+'has changed, you may want o check your watchlist for more details'
+            new_notification = Alerts(title = title ,content = content ,state='not done',user_id= current_user.id)
+            db.session.add(new_notification)
+            db.session.commit()
+
+
+        else:
+             item[symbol] = financialData[symbol]
+
+    return item
   
    elif request.method == 'POST':
     data = request.get_json()
