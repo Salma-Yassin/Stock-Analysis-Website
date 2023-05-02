@@ -225,9 +225,9 @@ def get_notoification_count():
 @app.route('/main-dashboard.html')
 @login_required
 def index():
-    stock_data = generate_stock_data()
-    with open("apps\dataMazen.json", "w") as f:
-        json.dump(stock_data, f)
+    # stock_data = generate_stock_data()
+    # with open("apps\dataMazen.json", "w") as f:
+    #     json.dump(stock_data, f)
     return render_template('home/main-dashboard.html', segment='index')
 
 
@@ -255,17 +255,28 @@ def get_stock_data():
     # Return the dictionary as JSON
     return json.dumps(data)
 
-@app.route('/data') # this is a dummy api that should be removed 
+@app.route('/data') # This is an API for the retriving data for the main dashbord 
 def get_chart_data():
    # generating random data for testing 
-   f = open("apps\dataMazen.json")
+   f = open("apps\data_main.json")
    return json.load(f)
+
+@app.route('/update_data' , methods = ['POST']) # This for updating the data in the dashboard
+def update_chart_data():
+    if request.method == 'POST':
+
+        stock_data = generate_stock_data()
+        with open("apps\data_main.json", "w") as f:
+            json.dump(stock_data, f)
+    
+    return jsonify({'status': 'success'})
+  
    
 
 @app.route('/add_to_watchlist', methods=['GET', 'POST']) # this is a dummy api that should be removed 
 def add_to_watchlist():
    if request.method == 'GET':
-    f = open("apps\dataMazen.json")
+    f = open("apps\data_main.json")
     all_data = json.load(f) #updated data 
 
     watchList = UserWatchList.query.filter_by(user_id=current_user.id)

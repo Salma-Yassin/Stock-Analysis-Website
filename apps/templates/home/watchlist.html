@@ -159,7 +159,18 @@
 
 <script>
   function onRefrsh() {
+
+    $.ajax({
+            type: "POST",
+            url: '/update_data',
+            data: JSON.stringify([]),
+            contentType: "application/json",
+            success: function (response) {
+              console.log(response);
+            },
+          });
     location.reload();
+    
   }
 
   var getStockData = $.get("/add_to_watchlist");
