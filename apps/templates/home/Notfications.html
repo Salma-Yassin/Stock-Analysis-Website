@@ -122,41 +122,6 @@ layout-footer-fixed {% endblock body_class %}
 <!-- PAGE SCRIPTS -->
 <script src="/static/assets/js/pages/dashboard2.js"></script>
 
-<script type="module">
-  import { Mediator } from "/static/assets/mediator.js";
-
-  // Create a new Mediator object
-  const mediator = new Mediator();
-
-  // Register a handler function with the mediator to remove the corresponding list item when the data has been deleted
-  mediator.register("dataDeleted", function (params) {
-    const button = params.button;
-    const itemId = params.itemId;
-    // Find the corresponding list item and remove it
-    const listItem = button.closest(".item");
-    listItem.remove();
-  });
-
-  const deleteButtons = document.querySelectorAll(".delete-button");
-
-  // Add a click event listener to each delete button
-  deleteButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      const itemId = button.dataset.id;
-
-      $.ajax({
-        type: "POST",
-        url: "/delete_notification",
-        data: JSON.stringify(itemId),
-        contentType: "application/json",
-        success: function (response) {
-          console.log(response);
-          // Notify the mediator that the data has been deleted
-          mediator.notify("dataDeleted", { button: button, itemId: itemId });
-        },
-      });
-    });
-  });
-</script>
+<script src="/static/assets/js/mainfile.js"> </script>
 
 {% endblock javascripts %}
