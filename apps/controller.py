@@ -2,6 +2,12 @@ from .models import *
 
 class controller:
 
+    def addUser(username, email, password):
+        new_user = Users(username = username ,email=email, password= password) 
+        db.session.add(new_user)
+        db.session.commit()
+        return new_user
+
     def editUser(id, email='', password='', name=''):
         user = Users.query.filter_by(id=id).first()
         if email != '':
@@ -30,26 +36,20 @@ class controller:
     
 
     def insertNotification(title,content,user_id):
-        notification = Alerts(title=title, content=content,used_id=user_id)
+        notification = Alerts(title = title ,content = content ,state='not done' ,user_id= user_id)
         db.session.add(notification)
         db.session.commit()
-    
-    def selectNotifications(user_id):
-        
-        notifications = Alerts.query.filter_by(user_id=user_id)
-        return notifications
     
     def deleteNotification(id):
         Notification = Alerts.query.filter_by(id=id).first()
         db.session.delete(Notification)
         db.session.commit()
     
-    def editallNotificationState():
-        notifications = Alerts.query.all()
-        for i in notifications:
-          if i.state != 'done':
-            i.state = 'done'
-          db.session.commit()
+    def editallNotificationState(user_id):
+        notifications = Alerts.query.filter_by(user_id=user_id).all()
+        for notification in notifications:
+            notification.state = 'done'
+            db.session.commit()
 
 
 

@@ -15,7 +15,6 @@ from wtforms import FileField, SubmitField
 from werkzeug.utils import secure_filename
 import os
 from wtforms.validators import InputRequired
-from .models import db 
 from random import sample 
 
 import sys
@@ -101,18 +100,13 @@ def register():
             return render_template('accounts/register.html',
                                    msg='Username field can not be empty',
                                    success=False)
-
         
-        new_user = Users(username = username ,email=email, password= generate_password_hash(password, method='sha256')) 
-        db.session.add(new_user)
-        db.session.commit()
+        new_user = controller.addUser(username = username ,email=email, password= generate_password_hash(password, method='sha256'))
         login_user(new_user, remember=True)
 
         # creating notifications for first time log in 
         user_id = current_user.id
-        new_notification = Alerts(title='First Notification',content='Welcome to the website',state='not done',user_id= user_id)
-        db.session.add(new_notification)
-        db.session.commit()
+        controller.insertNotification(title='First Notification',content='Welcome to the website',user_id= user_id)
 
 
         return redirect(url_for('route_default'))
@@ -172,12 +166,6 @@ def editingprofile():
     
 
 
-# @app.route('/main-dashboard.html')
-# @login_required
-# def index():
-#     return render_template('home/main-dashboard.html', segment='index')
-
-
 @app.route('/<template>')
 @login_required
 def route_template(template):
@@ -222,11 +210,8 @@ def get_segment(request):
 def getNotfication():
     if request.method == 'GET':
         user_id = current_user.id
-        notifications = Alerts.query.filter_by(user_id=user_id).all()
-        for notification in notifications:
-            notification.state = 'done'
-            db.session.commit()
-        return render_template('home/Notfications.html', values=Alerts.query.filter_by(user_id=user_id),notification_count=0)
+        controller.editallNotificationState(user_id=user_id)
+        return render_template('home/Notfications.html', values=Alerts.query.filter_by(user_id=user_id))
     
 
 @app.route('/get_notification_count')
@@ -333,10 +318,7 @@ def add_to_watchlist():
             # generate notification 
             title = symbol + ' has changed'
             content = 'The value for'+symbol+'has changed, you may want o check your watchlist for more details'
-            new_notification = Alerts(title = title ,content = content ,state='not done',user_id= current_user.id)
-            db.session.add(new_notification)
-            db.session.commit()
-
+            controller.insertNotification(title = title ,content = content ,user_id= current_user.id)
 
         else:
              item[symbol] = financialData[symbol]
