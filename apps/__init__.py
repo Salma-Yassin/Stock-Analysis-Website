@@ -12,9 +12,15 @@ from flask_sqlalchemy import SQLAlchemy
 from os import path
 from .models import db, Users
 from flask_login import LoginManager
+from werkzeug.middleware.shared_data import SharedDataMiddleware
+from werkzeug.utils import secure_filename
+from mimetypes import MimeTypes
 
 # Inject Flask magic
 app = Flask(__name__)
+
+mimetypes = MimeTypes()
+mimetypes.add_type('application/javascript', '.js')
 
 # load Configuration
 app.config.from_object( Config )
