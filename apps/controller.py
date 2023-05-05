@@ -40,7 +40,7 @@ class controller:
         return notifications
     
     def deleteNotification(id):
-        Notification = Alerts.query.filter_by(id=id).first()
+        Notification = Alerts.query.filter_by(id=id)
         db.session.delete(Notification)
         db.session.commit()
     

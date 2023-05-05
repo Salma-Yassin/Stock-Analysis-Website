@@ -263,7 +263,6 @@
 <script src="/static/assets/js/pages/dashboard3.js"></script>
 
 <script type="module">
-
   import { Mediator } from "/static/assets/mediator.js";
 
   // Create a new Mediator object
@@ -275,6 +274,9 @@
    getStockData.done(function (stocks) {
    const stockData = JSON.parse(stocks);
    const tableBody = document.querySelector("tbody");*/
+  mediator.register("dataAdded", function () {
+    window.location.href = "/watchlist.html";
+  });
 
   mediator.register("get_chart_data", function (data) {
     const tableBody = document.querySelector("tbody");
@@ -323,6 +325,7 @@
       addButton.classList.add("btn", "btn-block", "btn-info");
       addButton.setAttribute("type", "button");
       addButtonCell.appendChild(addButton);
+
       addButton.addEventListener("click", function () {
         const requestData = {
           [symbol]: financialData,
@@ -336,10 +339,12 @@
           contentType: "application/json",
           success: function (response) {
             console.log(response);
+            // Notify the mediator that the data has been added
+            mediator.notify("dataAdded");
           },
         });
-        window.location.href = "/watchlist.html";
       });
+
       addButtonCell.appendChild(addButton);
       row.appendChild(addButtonCell);
 
@@ -351,55 +356,55 @@
     mediator.notify("get_chart_data", data);
   });
 
-  var getNewsData = $.get("/main-dashboard-news-data");
-  // Get the table body element
-  getNewsData
-    .done(function (newsData) {
-      //console.log(newsData)
-      newsData = JSON.parse(newsData);
+  $.get("/main-dashboard-news-data", function (data) {
+    mediator.notify("newsDataUpdated", data);
+  });
 
-      for (const [symbol, newsItem] of Object.entries(newsData)) {
-        const cardId = `#${symbol}_news_card`; // Construct the card ID based on the current symbol
-        const card = document.querySelector(cardId);
 
-        // Update the card elements with data from the current newsItem
-        const cardImg = card.querySelector("img");
-        const cardTitle = card.querySelector("h2");
-        const cardText = card.querySelector("p");
-        const cardSource = card.querySelector(".card-footer span:first-child");
-        const cardTime = card.querySelector(".card-footer span:last-child");
+  mediator.register("newsDataUpdated", function (newsData) {
+    // Get the table body element
+    //console.log(newsData)
+    newsData = JSON.parse(newsData);
 
-        cardImg.src = newsItem.banner_image;
-        cardTitle.textContent = newsItem.title;
-        cardText.textContent = newsItem.summary;
-        cardSource.textContent = newsItem.source;
+    for (const [symbol, newsItem] of Object.entries(newsData)) {
+      const cardId = `#${symbol}_news_card`; // Construct the card ID based on the current symbol
+      const card = document.querySelector(cardId);
 
-        const timeString = newsItem.time_published;
-        console.log(newsItem.time_published);
-        const date = new Date(
-          timeString.slice(0, 4),
-          Number(timeString.slice(4, 6)) - 1,
-          timeString.slice(6, 8),
-          timeString.slice(9, 11),
-          timeString.slice(11, 13),
-          timeString.slice(13, 15)
-        );
+      // Update the card elements with data from the current newsItem
+      const cardImg = card.querySelector("img");
+      const cardTitle = card.querySelector("h2");
+      const cardText = card.querySelector("p");
+      const cardSource = card.querySelector(".card-footer span:first-child");
+      const cardTime = card.querySelector(".card-footer span:last-child");
 
-        const formattedDate = date.toLocaleDateString("en-US", {
-          month: "long",
-          day: "numeric",
-          year: "numeric",
-          hour: "numeric",
-          minute: "numeric",
-          second: "numeric",
-        });
-        console.log(formattedDate);
-        cardTime.textContent = formattedDate;
-      }
-    })
-    .fail(function (jqXHR, textStatus, errorThrown) {
-      console.error("Error getting news data: " + textStatus, errorThrown);
-    });
+      cardImg.src = newsItem.banner_image;
+      cardTitle.textContent = newsItem.title;
+      cardText.textContent = newsItem.summary;
+      cardSource.textContent = newsItem.source;
+
+      const timeString = newsItem.time_published;
+      console.log(newsItem.time_published);
+      const date = new Date(
+        timeString.slice(0, 4),
+        Number(timeString.slice(4, 6)) - 1,
+        timeString.slice(6, 8),
+        timeString.slice(9, 11),
+        timeString.slice(11, 13),
+        timeString.slice(13, 15)
+      );
+
+      const formattedDate = date.toLocaleDateString("en-US", {
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        second: "numeric",
+      });
+      console.log(formattedDate);
+      cardTime.textContent = formattedDate;
+    }
+  });
 </script>
 
 {% endblock javascripts %}

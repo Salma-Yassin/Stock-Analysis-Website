@@ -70,7 +70,7 @@
           </ol>
         </div>
         <div class="offset-sm-2 col-sm-10 text-right">
-          <a class="btn btn-app" onclick="onRefrsh()">
+          <a class="btn btn-app" id="refreshBtn">
             <i class="fas fa-sync-alt"></i> Refresh
           </a>
         </div>
@@ -157,25 +157,42 @@
 <script src="/static/assets/js/demo.js"></script>
 <script src="/static/assets/js/pages/dashboard3.js"></script>
 
-<script>
-  function onRefrsh() {
+<script type="module">
+  import { Mediator } from "/static/assets/mediator.js";
 
-    $.ajax({
-            type: "POST",
-            url: '/update_data',
-            data: JSON.stringify([]),
-            contentType: "application/json",
-            success: function (response) {
-              console.log(response);
-            },
-          });
+  // Create a new Mediator object
+  const mediator = new Mediator();
+
+  // Register a handler function with the mediator to update the data when it becomes available
+  mediator.register("dataUpdated", function () {
     location.reload();
-    
-  }
+  });
 
-  var getStockData = $.get("/add_to_watchlist");
-  // Get the table body element
-  getStockData.done(function (stockData) {
+  // Attach the onclick event listener using JavaScript
+  const refreshBtn = document.getElementById("refreshBtn");
+  refreshBtn.addEventListener("click", function () {
+    $.ajax({
+      type: "POST",
+      url: "/update_data",
+      data: JSON.stringify([]),
+      contentType: "application/json",
+      success: function (response) {
+        console.log(response);
+        // Notify the mediator that the data has been updated
+        mediator.notify("dataUpdated");
+      },
+    });
+  });
+
+  $.get("/add_to_watchlist", function (data) {
+    mediator.notify("getStockData", data);
+  });
+
+  mediator.register("dataRemoved", function () {
+    window.location.href = "/watchlist.html";
+  });
+
+  mediator.register("getStockData", function (stockData) {
     //const stockData = JSON.parse(stocks);
     const tableBody = document.querySelector("tbody");
     console.log(stockData);
@@ -260,36 +277,42 @@
       row.appendChild(recommendationCell);
 
       const addButtonCell = document.createElement("td");
-        const addButton = document.createElement("button");
-        addButton.textContent = "Delete";
-        addButton.classList.add("btn", "btn-block", "btn-info");
-        addButton.setAttribute("type", "button");
-        addButtonCell.appendChild(addButton);
-        addButton.addEventListener("click", function () {
-          const requestData = {
-            [symbol]: financialData,
-          };
-          console.log(financialData.financialData);
-          console.log(requestData);
-          $.ajax({
-            type: "POST",
-            url: "/remove_from_watchlist",
-            data: JSON.stringify(requestData),
-            contentType: "application/json",
-            success: function (response) {
-              console.log(response);
-            },
-          });
-          window.location.href = "/watchlist.html";
-        });
-        addButtonCell.appendChild(addButton);
-        row.appendChild(addButtonCell);
+      const addButton = document.createElement("button");
+      addButton.textContent = "Delete";
+      addButton.classList.add("btn", "btn-block", "btn-info");
+      addButton.setAttribute("type", "button");
+      addButtonCell.appendChild(addButton);
 
-      
+      addButton.addEventListener("click", function () {
+        const requestData = {
+          [symbol]: financialData,
+        };
+        console.log(financialData.financialData);
+        console.log(requestData);
+        $.ajax({
+          type: "POST",
+          url: "/remove_from_watchlist",
+          data: JSON.stringify(requestData),
+          contentType: "application/json",
+          success: function (response) {
+            console.log(response);
+            // Notify the mediator that the data has been removed
+            mediator.notify("dataRemoved");
+          },
+        });
+      });
+
+      addButtonCell.appendChild(addButton);
+      row.appendChild(addButtonCell);
 
       // Add the row to the table body
       tableBody.appendChild(row);
     } // End of For Loop
+  });
+  
+  mediator.register("weeklyDataLoaded", function (weekly_time_series) {
+    myChart.data = getSymbolWeeklyData(weekly_time_series);
+    myChart.update();
   });
 
   var updateChart = (symbol) => {
@@ -311,10 +334,11 @@
         // data is successfully parsed as a JSON object:
 
         console.log(data);
-        var weekly_time_series = data["Weekly Time Series"];
+        const weekly_time_series = data["Weekly Time Series"];
         console.log(weekly_time_series);
-        myChart.data = getSymbolWeeklyData(weekly_time_series);
-        myChart.update();
+
+        // Notify the mediator that the weekly time series data has been loaded
+        mediator.notify("weeklyDataLoaded", weekly_time_series);
       },
       error: function (jqXHR, textStatus, errorThrown) {
         console.log("Error:", textStatus, errorThrown);
