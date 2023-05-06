@@ -1,1 +1,0 @@
-{"TSLA": {"financialData": {"currentPrice": {"fmt": "164.31", "raw": 164.31}, "maxAge": 86400, "recommendationKey": "buy", "recommendationMean": {"fmt": "2.50", "raw": 2.5}, "targetHighPrice": {"fmt": "300.00", "raw": 300}, "targetLowPrice": {"fmt": "24.33", "raw": 24.33}, "targetMeanPrice": {"fmt": "182.19", "raw": 182.19}, "targetMedianPrice": {"fmt": "191.50", "raw": 191.5}}}}

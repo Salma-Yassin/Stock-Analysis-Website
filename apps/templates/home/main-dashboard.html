@@ -1,4 +1,4 @@
-{% extends "layouts/base.html" %} {% block title %} Dashboard3 {% endblock %}
+{% extends "layouts/base.html" %} {% block title %} Dashboard {% endblock %}
 
 <!-- Element injected in the BODY element -->
 {% block body_class %} sidebar-mini {% endblock body_class %}
@@ -34,7 +34,7 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin: 10px;
     padding: 10px;
-    max-width: 300px;
+    max-width: 400px;
   }
 
   .news_card img {
@@ -84,8 +84,8 @@
         <!-- /.col -->
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="#">Home</a></li>
-            <li class="breadcrumb-item active">Dashboard v3</li>
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item active">Dashboard</li>
           </ol>
         </div>
         <!-- /.col -->
@@ -175,7 +175,7 @@
 
           <div class="card custom-card">
             <div class="card-header border-0">
-              <h3 class="card-title">Products</h3>
+              <h3 class="card-title">Stocks</h3>
               <div class="card-tools">
                 <a href="#" class="btn btn-tool btn-sm">
                   <i class="fas fa-download"></i>
@@ -258,10 +258,8 @@
 <script src="/static/assets/js/adminlte.js"></script>
 
 <!-- OPTIONAL SCRIPTS -->
-<!--<script src="/static/assets/plugins/chart.js/Chart.min.js"></script>-->
-<script src="/static/assets/js/demo.js"></script>
-<!--<script src="/static/assets/js/pages/dashboard3.js"></script>-->
 
+<script src="/static/assets/js/demo.js"></script>
 <script src="/static/assets/js/mainfile.js"> </script>
 
 {% endblock javascripts %}

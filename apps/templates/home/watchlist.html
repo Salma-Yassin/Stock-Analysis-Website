@@ -1,4 +1,4 @@
-{% extends "layouts/base.html" %} {% block title %} Dashboard3 {% endblock %}
+{% extends "layouts/base.html" %} {% block title %} Watchlist {% endblock %}
 
 <!-- Element injected in the BODY element -->
 {% block body_class %} sidebar-mini {% endblock body_class %}
@@ -65,8 +65,8 @@
         <!-- /.col -->
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="#">Home</a></li>
-            <li class="breadcrumb-item active">Dashboard v3</li>
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item active">Watchlist</li>
           </ol>
         </div>
         <div class="offset-sm-2 col-sm-10 text-right">
@@ -91,7 +91,7 @@
 
           <div class="card">
             <div class="card-header border-0">
-              <h3 class="card-title">Products</h3>
+              <h3 class="card-title">Stocks</h3>
               <div class="card-tools">
                 <a href="#" class="btn btn-tool btn-sm">
                   <i class="fas fa-download"></i>
@@ -155,6 +155,5 @@
 <!-- OPTIONAL SCRIPTS -->
 <script src="/static/assets/plugins/chart.js/Chart.min.js"></script>
 <script src="/static/assets/js/demo.js"></script>
-<script src="/static/assets/js/pages/dashboard3.js"></script>
 <script src="/static/assets/js/mainfile.js"> </script>
 {% endblock javascripts %}
