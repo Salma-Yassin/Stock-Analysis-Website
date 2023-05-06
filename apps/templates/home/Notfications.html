@@ -63,7 +63,11 @@ layout-footer-fixed {% endblock body_class %}
               <a href="javascript:void({{item.id}})" class="product-title">
                 {{ item.title}}
                 <div class="card-tools float-right">
-                  <button type="button" class="btn btn-tool delete-button" data-id="{{ item.id }}">
+                  <button
+                    type="button"
+                    class="btn btn-tool delete-button"
+                    data-id="{{ item.id }}"
+                  >
                     <i class="fas fa-times"></i>
                   </button>
                 </div>
@@ -116,33 +120,7 @@ layout-footer-fixed {% endblock body_class %}
 <script src="/static/assets/plugins/chart.js/Chart.min.js"></script>
 
 <!-- PAGE SCRIPTS -->
-<script src="/static/assets/js/pages/dashboard2.js"></script>
 
-<script>
-  // Get all the delete buttons
-  const deleteButtons = document.querySelectorAll(".delete-button");
-
-  // Add a click event listener to each delete button
-  deleteButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      const itemId = button.dataset.id;
-
-      $.ajax({
-            type: "POST",
-            url: '/delete_notification',
-            data: JSON.stringify(itemId),
-            contentType: "application/json",
-            success: function (response) {
-              console.log(response);
-            },
-          });
-
-      // Find the corresponding list item and remove it
-      const listItem = button.closest(".item");
-      listItem.remove();
-
-    });
-  });
-</script>
+<script src="/static/assets/js/mainfile.js"> </script>
 
 {% endblock javascripts %}

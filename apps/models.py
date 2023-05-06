@@ -28,6 +28,7 @@ class UserWatchList(db.Model):
 
 class Alerts(db.Model):
     __tablename__ = 'Alerts'
+    
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String(100), nullable=False)
     content = db.Column(db.Text, nullable=False)

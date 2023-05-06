@@ -1,9 +1,9 @@
 // Define the API endpoint URL
+console.log("here");
 
 var countData = $.get("/get_notification_count");
 
 countData.done(function (count) {
-  console.log("here");
   console.log(count);
   // Get the span element using its ID
   const notificationCountSpan = document.getElementById("notification-count");
