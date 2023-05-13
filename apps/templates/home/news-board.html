@@ -1,0 +1,180 @@
+{% extends "layouts/base.html" %} {% block title %} Dashboard {% endblock %}
+
+<!-- Element injected in the BODY element -->
+{% block body_class %} sidebar-mini {% endblock body_class %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+
+<!-- Google Font: Source Sans Pro -->
+<link rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback" />
+<!-- Font Awesome Icons -->
+<link rel="stylesheet" href="/static/assets/plugins/fontawesome-free/css/all.min.css" />
+<!-- IonIcons -->
+<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" />
+<!-- Theme style -->
+<link rel="stylesheet" href="/static/assets/css/adminlte.min.css" />
+
+{% endblock stylesheets %} {% block content %}
+
+<!-- Content Wrapper. Contains page content -->
+<style>
+    .news_card {
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin: 10px;
+        padding: 10px;
+        max-width: 1600px;
+        max-height: 100px;
+        display: flex;
+        /* use flexbox to align items horizontally */
+        align-items: center;
+        /* center items vertically */
+    }
+
+    .news_card img {
+        max-width: 30%;
+        max-height: 30%;
+        /* make sure the image doesn't exceed its container */
+        margin-right: 20px;
+        /* add some space between the image and the text */
+        
+        /* make the image not shrinkable */
+    }
+
+    .news_card_content {
+        display: flex;
+        flex-direction: row;
+        /* align the content vertically */
+        justify-content: center;
+        /* center the content horizontally */
+        flex-grow: 1;
+        /* make the content grow to fill the remaining space */
+    }
+
+    .news_card h2 {
+        font-size: 18px;
+        margin: 10px 0;
+    }
+
+    .news_card p {
+        font-size: 14px;
+        line-height: 1.5;
+        margin: 10px 0;
+    }
+
+    .news_card .card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 12px;
+        color: #666;
+        margin-top: 10px;
+    }
+
+    .custom-card .table-wrapper {
+        max-height: 10px;
+        /* Increase the maximum height for the table */
+        overflow-y: auto;
+        /* Add a vertical scrollbar */
+    }
+
+    .custom-card .card-body {
+        height: 10px;
+        /* Set the height of the card body */
+    }
+</style>
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Dashboard</h1>
+                </div>
+                <!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item active">Dashboard</li>
+                    </ol>
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col" style ="max-height: 10px;">
+
+                    <div class="card news_card" id="AAPL_news_card">
+                        
+                        <div class="news_card_content">
+                            <img src="" alt="Banner image" />
+                            <div class="row">
+                            <h2></h2>
+                            <p></p>
+                        </div>
+                        </div>
+                        <div class="card-footer">
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                    <div class="card news_card" id="AMZN_news_card">
+                        <img src="" alt="Banner image" />
+                        <div class="news_card_content">
+                        <h2></h2>
+                        <p></p>
+                    </div>
+                        <div class="card-footer">
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                    <div class="card news_card" id="TSLA_news_card">
+                        <img src="" alt="Banner image" />
+                        <h2></h2>
+                        <p></p>
+                        <div class="card-footer">
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.col-md-6 -->
+            </div>
+
+            <!-- /.container-fluid -->
+        </div>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+</div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+<!-- jQuery -->
+<script src="/static/assets/plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap -->
+<script src="/static/assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE -->
+<script src="/static/assets/js/adminlte.js"></script>
+
+<!-- OPTIONAL SCRIPTS -->
+
+<script src="/static/assets/js/demo.js"></script>
+<script src="/static/assets/js/mainfile.js"> </script>
+
+{% endblock javascripts %}
