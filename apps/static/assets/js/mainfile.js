@@ -169,7 +169,6 @@ mediator.register("newsDataUpdated", function (newsData) {
 
   for (const [symbol, newsItem] of Object.entries(newsData)) {
     const cardId = `#${symbol}_news_card`; // Construct the card ID based on the current symbol
-
     const card = document.querySelector(cardId);
 
     if (card) {
@@ -177,13 +176,14 @@ mediator.register("newsDataUpdated", function (newsData) {
       const cardImg = card.querySelector("img");
       const cardTitle = card.querySelector("h2");
       const cardText = card.querySelector("p");
-      const cardSource = card.querySelector(".card-footer span:first-child");
-      const cardTime = card.querySelector(".card-footer span:last-child");
+      //const cardSource = card.querySelector(".card-footer1 span:first-child");
+      //const cardTime = card.querySelector(".card-footer span:last-child");
+      //console.log(cardSource)
 
       cardImg.src = newsItem.banner_image;
       cardTitle.textContent = newsItem.title;
       cardText.textContent = newsItem.summary;
-      cardSource.textContent = newsItem.source;
+      //cardSource.textContent = newsItem.source;
 
       const timeString = newsItem.time_published;
       console.log(newsItem.time_published);
@@ -205,7 +205,7 @@ mediator.register("newsDataUpdated", function (newsData) {
         second: "numeric",
       });
       console.log(formattedDate);
-      cardTime.textContent = formattedDate;
+      //cardTime.textContent = formattedDate;
     }
   }
 });
