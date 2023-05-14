@@ -166,46 +166,56 @@ mediator.register("newsDataUpdated", function (newsData) {
   // Get the table body element
   //console.log(newsData)
   newsData = JSON.parse(newsData);
+  var counter = 0;
+  for (const [symbol, newsList] of Object.entries(newsData)) {
+    for (const [index, newsItem] of Object.entries(newsList)) {
+      counter = counter + 1
+      const cardId = `#news_card_${counter}`; // Construct the card ID based on the current symbol
+      const card = document.querySelector(cardId);
 
-  for (const [symbol, newsItem] of Object.entries(newsData)) {
-    const cardId = `#${symbol}_news_card`; // Construct the card ID based on the current symbol
-    const card = document.querySelector(cardId);
+      if (card) {
+        // Update the card elements with data from the current newsItem
+        const cardImg = card.querySelector("img");
+        const cardTitle = card.querySelector("h2");
+        const cardText = card.querySelector("p");
+        const cardRelatedStock = card.querySelector(".card-footer span:first-child");
+        const cardSource = card.querySelector(".card-footer span:nth-child(2)");
+        const cardAuthor = card.querySelector(".card-footer span:nth-child(3)");
+        const cardTime = card.querySelector(".card-footer span:last-child");
+        const cardUrl = card.querySelector("a");
+        //console.log(cardSource)
 
-    if (card) {
-      // Update the card elements with data from the current newsItem
-      const cardImg = card.querySelector("img");
-      const cardTitle = card.querySelector("h2");
-      const cardText = card.querySelector("p");
-      //const cardSource = card.querySelector(".card-footer1 span:first-child");
-      //const cardTime = card.querySelector(".card-footer span:last-child");
-      //console.log(cardSource)
+        cardImg.src = newsItem.banner_image;
+        cardTitle.textContent = newsItem.title;
+        cardText.textContent = newsItem.summary;
+        cardSource.textContent = "Source: " + newsItem.source;
+        cardAuthor.textContent = "Authors: " + newsItem.authors;
+        cardRelatedStock.textContent = "Related Stock: " + symbol;
+        if (cardUrl){cardUrl.href = newsItem.url;}
+        
 
-      cardImg.src = newsItem.banner_image;
-      cardTitle.textContent = newsItem.title;
-      cardText.textContent = newsItem.summary;
-      //cardSource.textContent = newsItem.source;
+        const timeString = newsItem.time_published;
+        console.log(newsItem.time_published);
+        const date = new Date(
+          timeString.slice(0, 4),
+          Number(timeString.slice(4, 6)) - 1,
+          timeString.slice(6, 8),
+          timeString.slice(9, 11),
+          timeString.slice(11, 13),
+          timeString.slice(13, 15)
+        );
 
-      const timeString = newsItem.time_published;
-      console.log(newsItem.time_published);
-      const date = new Date(
-        timeString.slice(0, 4),
-        Number(timeString.slice(4, 6)) - 1,
-        timeString.slice(6, 8),
-        timeString.slice(9, 11),
-        timeString.slice(11, 13),
-        timeString.slice(13, 15)
-      );
-
-      const formattedDate = date.toLocaleDateString("en-US", {
-        month: "long",
-        day: "numeric",
-        year: "numeric",
-        hour: "numeric",
-        minute: "numeric",
-        second: "numeric",
-      });
-      console.log(formattedDate);
-      //cardTime.textContent = formattedDate;
+        const formattedDate = date.toLocaleDateString("en-US", {
+          month: "long",
+          day: "numeric",
+          year: "numeric",
+          hour: "numeric",
+          minute: "numeric",
+          second: "numeric",
+        });
+        console.log(formattedDate);
+        cardTime.textContent = formattedDate;
+      }
     }
   }
 });
@@ -433,8 +443,7 @@ var ticksStyle = {
 
 var myChart
 // Create the chart
-if(document.getElementById("myChart"))
-{
+if (document.getElementById("myChart")) {
   const ctx = document.getElementById("myChart").getContext("2d");
   myChart = new Chart(ctx, {
     type: "line",

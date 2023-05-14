@@ -242,7 +242,7 @@ def index():
 def get_news_data():
 
     news_data = {}
-    symbols = ['AAPL', 'AMZN', 'TSLA']
+    symbols = ['AAPL', 'AMZN', 'TSLA', 'GOOG', 'NVDA']
     apikey = "8X74CQALL5BWTHJE"
 
     for symbol in symbols:
@@ -250,7 +250,9 @@ def get_news_data():
         r = requests.get(url)
         
         if r.status_code == 200: # Check if the request was successful
-            news_data[symbol] = r.json()['feed'][0] # Add the response data to the dictionary
+            news_data[symbol] = {}
+            for i in range(5):
+                news_data[symbol][i] = r.json()['feed'][i] # Add the response data to the dictionary
         else:
             print(f"Failed to get data for {symbol}") # Handle the error case
 

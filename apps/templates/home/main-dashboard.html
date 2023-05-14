@@ -210,33 +210,20 @@
           <a href="news-board.html" 
               >More News <i class="fas fa-arrow-circle-right"></i
             ></a>
-          <div class="card news_card" id="AAPL_news_card">
+          {% for i in range(1,21,7) %}
+          <div class="card news_card" id="news_card_{{ i }}">
             <img src="" alt="Banner image" />
             <h2></h2>
             <p></p>
             <div class="card-footer">
               <span></span>
               <span></span>
-            </div>
-          </div>
-          <div class="card news_card" id="AMZN_news_card">
-            <img src="" alt="Banner image" />
-            <h2></h2>
-            <p></p>
-            <div class="card-footer">
               <span></span>
               <span></span>
             </div>
           </div>
-          <div class="card news_card" id="TSLA_news_card">
-            <img src="" alt="Banner image" />
-            <h2></h2>
-            <p></p>
-            <div class="card-footer">
-              <span></span>
-              <span></span>
-            </div>
-          </div>
+          {% endfor %}
+          
         </div>
         <!-- /.col-md-6 -->
       </div>

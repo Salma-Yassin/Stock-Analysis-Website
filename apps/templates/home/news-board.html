@@ -7,20 +7,12 @@
 {% block stylesheets %}
 
 <!-- Google Font: Source Sans Pro -->
-<link
-  rel="stylesheet"
-  href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback"
-/>
+<link rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback" />
 <!-- Font Awesome Icons -->
-<link
-  rel="stylesheet"
-  href="/static/assets/plugins/fontawesome-free/css/all.min.css"
-/>
+<link rel="stylesheet" href="/static/assets/plugins/fontawesome-free/css/all.min.css" />
 <!-- IonIcons -->
-<link
-  rel="stylesheet"
-  href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"
-/>
+<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" />
 <!-- Theme style -->
 <link rel="stylesheet" href="/static/assets/css/adminlte.min.css" />
 
@@ -28,207 +20,123 @@
 
 <!-- Content Wrapper. Contains page content -->
 <style>
-  .news_card {
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin: 10px;
-    padding: 10px;
-    max-width: 1600px;
-    max-height: 100px;
-    display: flex;
-    /* use flexbox to align items horizontally */
-    align-items: center;
-    /* center items vertically */
-  }
+    .news-card {
+        background-color: #ffffff;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        display: flex;
+        margin-bottom: 1rem;
+        overflow: hidden;
+        height: 200px;
+        width: 100%;
+    }
 
-  .news_card img {
-    max-width: 30%;
-    max-height: 30%;
-    /* make sure the image doesn't exceed its container */
-    margin-right: 20px;
-    /* add some space between the image and the text */
+    .news-card-image {
+        flex: 0 0 150px;
+        height: 100%;
+        object-fit: cover;
+        width: 25%;
+        padding: 1rem;
+    }
 
-    /* make the image not shrinkable */
-  }
+    .news-card-content {
+        padding: 1rem;
+        width: 90%; 
+    }
 
-  .news_card_content {
-    display: flex;
-    flex-direction: row;
-    /* align the content vertically */
-    justify-content: center;
-    /* center the content horizontally */
-    flex-grow: 1;
-    /* make the content grow to fill the remaining space */
-  }
+    .news-card-title {
+        font-size: 1.5rem;
 
-  .news_card h2 {
-    font-size: 18px;
-    margin: 10px 0;
-  }
+    }
 
-  .news_card p {
-    font-size: 14px;
-    line-height: 1.5;
-    margin: 10px 0;
-  }
+    .news-card-description {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        overflow: hidden;
+        margin: 10px;
+        text-overflow: ellipsis;
+        line-height: 1.5;
+    }
 
-  .news_card .card-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 12px;
-    color: #666;
-    margin-top: 10px;
-  }
+    .card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 12px;
+        color: #666;
+        margin-top: 10px;
+        width: 100%;
+    }
 
-  .custom-card .table-wrapper {
-    max-height: 10px;
-    /* Increase the maximum height for the table */
-    overflow-y: auto;
-    /* Add a vertical scrollbar */
-  }
+    .news-card-link {
+        margin-top: auto;
+        font-size: 12px;
+        color: #007bff;
+        text-decoration: none;
+    }
 
-  .custom-card .card-body {
-    height: 10px;
-    /* Set the height of the card body */
-  }
-
-  .news-card {
-    background-color: #ffffff;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    display: flex;
-    margin-bottom: 1rem;
-    overflow: hidden;
-    height: 200px;
-  }
-
-  .news-card-image {
-    flex: 0 0 150px;
-    height: 100%;
-    object-fit: cover;
-    width: 25%;
-    margin: 1rem;
-    margin-right: 1rem;
-  }
-
-  .news-card-content {
-    padding: 1rem;
-  }
-
-  .news-card-title {
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .news-card-description {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    overflow: hidden;
-  }
-
-  .news-card-description p {
-    margin: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    line-height: 1.5;
-    max-height: calc(
-      100% - 3rem
-    ); /* Subtract height of "See More" button and some margin */
-  }
-
-  .news-card-link {
-    margin-top: auto;
-    color: #007bff;
-    text-decoration: none;
-  }
-
-  .news-card-link:hover {
-    text-decoration: underline;
-  }
+    .news-card-link:hover {
+        text-decoration: underline;
+    }
 </style>
 
 <div class="content-wrapper">
-  <!-- Content Header (Page header) -->
-  <div class="content-header">
-    <div class="container-fluid">
-      <div class="row mb-2">
-        <div class="col-sm-6">
-          <h1 class="m-0 text-dark">Market News Dashboard</h1>
-        </div>
-        <!-- /.col -->
-        <div class="col-sm-6">
-          <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="/">Home</a></li>
-            <li class="breadcrumb-item active">Dashboard</li>
-          </ol>
-        </div>
-        <!-- /.col -->
-      </div>
-      <!-- /.row -->
-    </div>
-    <!-- /.container-fluid -->
-  </div>
-  <!-- /.content-header -->
-
-  <!-- Main content -->
-  <div class="content">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col" style="max-height: 10px">
-
-            <div class="news-card" id="TSLA_news_card">
-                <img src="" alt="Banner image" class="news-card-image" />
-                <div class="news-card-content">
-                  <h2 class="news-card-title"></h2>
-                  <p class="news-card-description"></p>
-                  <div class="card-footer">
-                    <span></span>
-                    <span></span>
-                    <a href="#" class="news-card-link">See More</a>
-                  </div>
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Market News Dashboard</h1>
                 </div>
-              </div>
-
-          <div class="news-card" id="AAPL_news_card">
-            <img src="" alt="Banner image" class="news-card-image" />
-            <div class="news-card-content">
-              <h2 class="news-card-title"></h2>
-              <p class="news-card-description"></p>
-              <div class="card-footer1">
-                <span></span>
-                <span></span>
-                <a href="#" class="news-card-link">See More</a>
-              </div>
+                <!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item active">Dashboard</li>
+                    </ol>
+                </div>
+                <!-- /.col -->
             </div>
-          </div>
-
-
-          <div class="news-card" id="AMZN_news_card">
-            <img src="" alt="Banner image" class="news-card-image" />
-            <div class="news-card-content">
-              <h2 class="news-card-title"></h2>
-              <p class="news-card-description"></p>
-              <div class="card-footer">
-                <a href="#" class="news-card-link">See More</a>
-                <span></span>
-                <span></span>
-              </div>
-            </div>
-          </div>
-
+            <!-- /.row -->
         </div>
-        <!-- /.col-md-6 -->
-      </div>
-
-      <!-- /.container-fluid -->
+        <!-- /.container-fluid -->
     </div>
-    <!-- /.content -->
-  </div>
-  <!-- /.content-wrapper -->
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                {% for i in range(1,21) %}
+                <div class="news-card" id="news_card_{{ i }}">
+                    <img src="" alt="Banner image" class="news-card-image" />
+                    <div class="news-card-content">
+                        <h2 class="news-card-title"></h2>
+                        <p></p>
+                        <a href="" class="news-card-link" target="_blank">See More</a>
+                        <div class="card-footer">
+                            <span style="color: red;"></span>
+                            <span></span> 
+                            <span></span> 
+                            <span></span> 
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+
+                
+
+
+                <!-- /.col-md-6 -->
+            </div>
+
+            <!-- /.container-fluid -->
+        </div>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
 </div>
 
 {% endblock content %}
