@@ -29,7 +29,6 @@ from .generate_stock_data import generate_stock_data
 import requests
 import re
 
-
 def is_valid_string(s): # Check that the given string is a valid email  
     pattern = r'^[a-zA-Z0-9]+@[a-zA-Z]+\.[a-zA-Z]{3}$'
     return bool(re.match(pattern, s))
@@ -285,6 +284,13 @@ def get_stock_data():
 def get_chart_data():
    # generating random data for testing 
    f = open(os.path.join(os.getcwd(), "apps", "data_main.json"))
+   return json.load(f)
+
+
+@app.route('/globalMarketStatus') # This is an API for the retriving data for the main dashbord 
+def get_market_data():
+   # generating random data for testing 
+   f = open(os.path.join(os.getcwd(), "apps", "market_data.json"))
    return json.load(f)
 
 @app.route('/update_data' , methods = ['POST']) # This for updating the data in the dashboard
