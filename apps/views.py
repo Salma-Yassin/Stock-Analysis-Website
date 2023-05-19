@@ -284,7 +284,7 @@ def get_stock_data():
 @app.route('/data') # This is an API for the retriving data for the main dashbord 
 def get_chart_data():
    # generating random data for testing 
-   f = open("apps\\data_main.json")
+   f = open(os.path.join(os.getcwd(), "apps", "data_main.json"))
    return json.load(f)
 
 @app.route('/update_data' , methods = ['POST']) # This for updating the data in the dashboard
@@ -292,7 +292,7 @@ def update_chart_data():
     if request.method == 'POST':
 
         stock_data = generate_stock_data()
-        with open("apps\\data_main.json", "w") as f:
+        with open(os.path.join(os.getcwd(), "apps", "data_main.json"), "w") as f:
             json.dump(stock_data, f)
     
     return jsonify({'status': 'success'})
@@ -301,7 +301,7 @@ def update_chart_data():
 @app.route('/add_to_watchlist', methods=['GET', 'POST']) # this is a dummy api that should be removed 
 def add_to_watchlist():
    if request.method == 'GET':
-    f = open("apps\\data_main.json")
+    f = open(os.path.join(os.getcwd(), "apps", "data_main.json"))
     all_data = json.load(f) #updated data 
 
     watchList = UserWatchList.query.filter_by(user_id=current_user.id)
