@@ -90,6 +90,3 @@ stages:
             --name $(containerGroupName) \
             --query "{FQDN:ipAddress.fqdn,ProvisioningState:provisioningState}" \
             --out table
-
-
-      
