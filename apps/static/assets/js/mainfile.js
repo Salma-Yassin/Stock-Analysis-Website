@@ -158,6 +158,56 @@ mediator.register("get_chart_data", function (data) {
   }
 });
 
+$.get("/globalMarketStatus", function (data) {
+  mediator.notify("get_market_data", data);
+});
+
+
+mediator.register("get_market_data", function (data) {
+  const tableBody = document.querySelector("#Global_tbody");
+
+  if (tableBody) {
+    for (const market of data) {
+      const row = document.createElement("tr");
+
+      const marketTypeCell = document.createElement("td");
+      marketTypeCell.textContent = market.market_type;
+      row.appendChild(marketTypeCell);
+
+      const regionCell = document.createElement("td");
+      regionCell.textContent = market.region;
+      row.appendChild(regionCell);
+
+      const primaryExchangesCell = document.createElement("td");
+      primaryExchangesCell.textContent = market.primary_exchanges;
+      row.appendChild(primaryExchangesCell);
+
+      const localOpenCell = document.createElement("td");
+      localOpenCell.textContent = market.local_open;
+      row.appendChild(localOpenCell);
+
+      const localCloseCell = document.createElement("td");
+      localCloseCell.textContent = market.local_close;
+      row.appendChild(localCloseCell);
+
+      const currentStatusCell = document.createElement("td");
+      const statusBadge = document.createElement("span");
+      statusBadge.textContent = market.current_status;
+      statusBadge.classList.add("badge");
+      if (market.current_status === "open") {
+        statusBadge.classList.add("bg-success"); // green badge
+      } else {
+        statusBadge.classList.add("bg-danger"); // red badge
+      }
+      currentStatusCell.appendChild(statusBadge);
+      row.appendChild(currentStatusCell);
+
+      tableBody.appendChild(row);
+    }
+  }
+});
+
+
 $.get("/main-dashboard-news-data", function (data) {
   mediator.notify("newsDataUpdated", data);
 });

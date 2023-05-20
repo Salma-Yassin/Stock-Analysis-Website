@@ -289,9 +289,15 @@ def get_chart_data():
 
 @app.route('/globalMarketStatus') # This is an API for the retriving data for the main dashbord 
 def get_market_data():
-   # generating random data for testing 
-   f = open(os.path.join(os.getcwd(), "apps", "market_data.json"))
-   return json.load(f)
+
+    apikey = "8X74CQALL5BWTHJE"
+    url = f"https://www.alphavantage.co/query?function=MARKET_STATUS&apikey={apikey}"
+    r = requests.get(url)
+    data = r.json()
+    # generating random data for testing 
+    #f = open(os.path.join(os.getcwd(), "apps", "market_data.json"))
+    # return json.load(f)
+    return data['markets']
 
 @app.route('/update_data' , methods = ['POST']) # This for updating the data in the dashboard
 def update_chart_data():
