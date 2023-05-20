@@ -17,7 +17,7 @@ variables:
   azureSubscription: 'azureSubscription'
   containerGroupName: 'devopsswapp'
   containerName: 'devopsswapp'
-  appName: 'devOps-SW-Project'
+  appName: 'SW-web-AppContainer'
   tag: '$(Build.BuildId)'
 
   # Agent VM image name
