@@ -15,9 +15,17 @@ from flask_login import LoginManager
 from werkzeug.middleware.shared_data import SharedDataMiddleware
 from werkzeug.utils import secure_filename
 from mimetypes import MimeTypes
+from applicationinsights.flask.ext import AppInsights
+from applicationinsights import TelemetryClient
 
 # Inject Flask magic
 app = Flask(__name__)
+
+# Load configuration settings from the Config class in config.py
+app.config.from_object(Config)
+# Initialize the Application Insights SDK
+telemetry_client = TelemetryClient(app.config['APPINSIGHTS_INSTRUMENTATIONKEY'])
+appinsights = AppInsights(app)
 
 mimetypes = MimeTypes()
 mimetypes.add_type('application/javascript', '.js')
