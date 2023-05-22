@@ -17,7 +17,6 @@ variables:
   azureSubscription: 'azureSubscription'
   containerGroupName: 'devopsswapp'
   containerName: 'devopsswapp'
-  appName: 'SW-web-AppContainer'
   tag: '$(Build.BuildId)'
 
   # Agent VM image name
@@ -39,14 +38,14 @@ stages:
         pytest test_login.py
       displayName: Run tests with Pytest
       
-
 - stage: Build
   displayName: Build and push stage
   jobs:
   - job: Build
-    displayName: Build
+    displayName: Build and push Docker image
     pool:
       vmImage: $(vmImageName)
+      parallel: 1
     steps:
     - task: Docker@2
       displayName: Build and push an image to container registry
@@ -57,12 +56,35 @@ stages:
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
-
-
-    ## Add the below snippet at the end of your pipeline
-    - task: AzureWebAppContainer@1
-      displayName: 'Azure Web App on Container Deploy'
+          
+    - task: AzureCLI@2
+      displayName: 'Create container group'
       inputs:
         azureSubscription: $(azureSubscription)
-        appName: $(appName)
-        imageName: $(containerRegistry)/$(imageRepository):$(tag)
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az container create \
+            --resource-group myResourceGroup \
+            --name $(containerGroupName) \
+            --image $(containerRegistry)/$(imageRepository):$(tag) \
+            --cpu 1 \
+            --memory 1 \
+            --ports 5000 \
+            --ip-address public \
+            --registry-login-server $(containerRegistry) \
+            --registry-username 'MyContainer23Registry' \
+            --registry-password 'jKYFAUenrzJkalDiMVZ511aFTyFc1fF5FstrRQV31k+ACRCevkos' \
+            --dns-name-label $(containerName)
+    - task: AzureCLI@2
+      displayName: 'Show container group details'
+      inputs:
+        azureSubscription: $(azureSubscription)
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az container show \
+            --resource-group myResourceGroup \
+            --name $(containerGroupName) \
+            --query "{FQDN:ipAddress.fqdn,ProvisioningState:provisioningState}" \
+            --out table
