@@ -37,6 +37,11 @@
   <!-- Right navbar links -->
   <ul class="navbar-nav ml-auto">
     <!-- Messages Dropdown Menu -->
+    <li class="nav-item dropdown">
+        <input type="time" id="time-input" name="time" value="{{time}}" readonly>
+        <input type="date" id="date-input" name="date" value="{{date}}" readonly>
+        <input type="day" id="day-input" name="day" value="{{day}}" readonly>
+    </li>
 
     <!-- Notifications Dropdown Menu -->
     <li class="nav-item dropdown">
@@ -44,6 +49,7 @@
         <i class="far fa-bell"></i>
         <span class="badge badge-warning navbar-badge" id="notification-count"></span>
       </a>
+    </li>
       <!-- <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
           <span class="dropdown-item dropdown-header">15 Notifications</span> -->
 
@@ -66,7 +72,7 @@
           <a href="/Notfications" class="dropdown-item dropdown-footer">See All Notifications</a> -->
       <!--         </div>
  -->
-    </li>
+   
     <li class="nav-item">
       <a
         class="nav-link"

@@ -33,3 +33,10 @@ class Alerts(db.Model):
     content = db.Column(db.Text, nullable=False)
     state = db.Column(db.String(10),nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('Users.id'), nullable=False)
+
+class Timezone(db.Model):
+    __tablename__ = 'Timezone'
+    user_id = db.Column(db.Integer, db.ForeignKey('Users.id'), nullable=False, primary_key=True)
+    time = db.Column(db.Time, nullable=False)
+    date = db.Column(db.Date, nullable=False)
+    day = db.Column(db.String(10), nullable=False)
