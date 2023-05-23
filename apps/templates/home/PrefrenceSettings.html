@@ -1,0 +1,75 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Forms Editor {% endblock %} 
+
+<!-- Element injected in the BODY element -->
+{% block body_class %} sidebar-mini {% endblock body_class %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="/static/assets/plugins/fontawesome-free/css/all.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/static/assets/css/adminlte.min.css">
+  <!-- summernote -->
+  <link rel="stylesheet" href="/static/assets/plugins/summernote/summernote-bs4.min.css">
+
+{% endblock stylesheets %}
+
+{% block content %}  
+
+  <div class="content-wrapper" style="display: flex; align-items: center;justify-content: center; font-size: xx-large;">
+   
+    <div class="card">
+      <div class="card-body">
+    <form action="/set-time" method="POST">
+      <label for="time-input">Set time:</label>
+      <input type="time" id="time-input" name="time" value="{{time}}">
+      <br>
+      <label for="date-input">Set date:</label>
+      <input type="date" id="date-input" name="date" value="{{date}}">
+      <br>
+      <label for="day-input">Set day:</label>
+      <select id="day-input" name="day">
+        <option value="Monday" {% if day == 'Monday' %}selected{% endif %}>Monday</option>
+        <option value="Tuesday" {% if day == 'Tuesday' %}selected{% endif %}>Tuesday</option>
+        <option value="Wednesday" {% if day == 'Wednesday' %}selected{% endif %}>Wednesday</option>
+        <option value="Thursday" {% if day == 'Thursday' %}selected{% endif %}>Thursday</option>
+        <option value="Friday" {% if day == 'Friday' %}selected{% endif %}>Friday</option>
+        <option value="Saturday" {% if day == 'Saturday' %}selected{% endif %}>Saturday</option>
+        <option value="Sunday" {% if day == 'Sunday' %}selected{% endif %}>Sunday</option>
+      </select>
+      <br>
+    
+      <input type="submit" value="Set">
+  </form>
+</div></div>
+  </div>
+  
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+  <!-- jQuery -->
+  <script src="/static/assets/plugins/jquery/jquery.min.js"></script>
+  <!-- Bootstrap 4 -->
+  <script src="/static/assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <!-- AdminLTE App -->
+  <script src="/static/assets/js/adminlte.min.js"></script>
+  <!-- AdminLTE for demo purposes -->
+  <script src="/static/assets/js/demo.js"></script>
+  <!-- Summernote -->
+  <script src="/static/assets/plugins/summernote/summernote-bs4.min.js"></script>
+  <script>
+    $(function () {
+      // Summernote
+      $('.textarea').summernote()
+    })
+  </script>
+
+{% endblock javascripts %}

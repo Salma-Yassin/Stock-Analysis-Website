@@ -6,6 +6,7 @@ Copyright (c) 2019 - present AppSeed.us
 # Flask modules
 from flask   import Flask, render_template, request, flash, redirect, url_for, jsonify
 import json
+import pytz
 from jinja2  import TemplateNotFound
 from .models import *
 from flask_login import login_user, login_required, current_user, logout_user
@@ -29,7 +30,6 @@ from .generate_stock_data import generate_stock_data
 import requests
 import re
 
-
 def is_valid_string(s): # Check that the given string is a valid email  
     pattern = r'^[a-zA-Z0-9]+@[a-zA-Z]+\.[a-zA-Z]{3}$'
     return bool(re.match(pattern, s))
@@ -38,8 +38,9 @@ def is_valid_string(s): # Check that the given string is a valid email
 def route_default():
     return redirect(url_for('login'))
 
-# Login & Registration
+#-------------------------------------------------- Routes ---------------------------------------
 
+# Login & Registration
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -64,6 +65,7 @@ def login():
         return render_template('accounts/login.html')
     return redirect(url_for('index'))
     
+# Register 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
 
@@ -113,13 +115,14 @@ def register():
     
     return render_template('accounts/register.html')
        
+# Logout        
 @app.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('login'))
 
-## profile Settings 
 
+## profile Settings 
 # Recover Password
 @app.route('/recoverpassword', methods=['GET', 'POST'])
 def recoverpassword():
@@ -165,6 +168,11 @@ def editingprofile():
         return render_template('home/edit-profile.html', user=current_user)
     
 
+@app.route('/index')
+@app.route('/main-dashboard.html')
+@login_required
+def index():
+    return render_template('home/main-dashboard.html', segment='index')
 
 @app.route('/<template>')
 @login_required
@@ -201,9 +209,48 @@ def get_segment(request):
 
     except:
         return None
+    
+#SET TIME, DATE, DAY
+@app.route('/set-time', methods=['GET','POST'])
+def set_time():
+    if request.method == 'POST':
+        user_id = current_user.id
+        time_str = request.form.get('time')
+        if time_str:
+            time = datetime.strptime(time_str, '%H:%M').time()
+        else:
+            time = None
+        date_str = request.form.get('date')
+        if date_str:
+            date = datetime.strptime(date_str, '%Y-%m-%d').date()
+        else:
+            date = None
+        day = request.form.get('day')
 
+        # Update the Timezone record with the new time, date, and day
+        timezone = Timezone.query.filter_by(user_id=user_id).first()
+        if timezone:
+            if time:
+                timezone.time = time
+            if date:
+                timezone.date = date
+            if day:
+                timezone.day = day
+        else:
+            # Create a new Timezone record for the current user
+            timezone = Timezone(user_id=user_id, time=str(time), date=str(date), day=day)
+            db.session.add(timezone)
 
+        # Save changes to the database
+        db.session.commit()
+        return render_template('home/PrefrenceSettings.html', time=time, date=date,day=day)
 
+@app.route('/get_time')
+def get_time():
+    user_id = current_user.id
+    timezone = Timezone.query.filter_by(user_id=user_id).first()
+    print(timezone)
+    return jsonify(timezone)
 
 # Get Notifications
 @app.route('/Notfications', methods=['GET', 'POST'])
@@ -225,67 +272,32 @@ def get_notoification_count():
             notification_count += 1
     print(notification_count)
     return jsonify(notification_count)
-    
-
-@app.route('/index')
-@app.route('/main-dashboard.html')
-@login_required
-def index():
-    # stock_data = generate_stock_data()
-    # with open("apps\dataMazen.json", "w") as f:
-    #     json.dump(stock_data, f)
-    return render_template('home/main-dashboard.html', segment='index')
 
 
-#----------- APIs---------#
-@app.route('/main-dashboard-news-data')
-def get_news_data():
-
-    news_data = {}
-    symbols = ['AAPL', 'AMZN', 'TSLA', 'GOOG', 'NVDA']
-    apikey = "8X74CQALL5BWTHJE"
-
-    for symbol in symbols:
-        url = f"https://www.alphavantage.co/query?function=NEWS_SENTIMENT&tickers={symbol}&apikey={apikey}"
-        r = requests.get(url)
+@app.route('/delete_notification', methods=['POST']) # this is a dummy api that should be removed 
+def delete_notification():
+    if request.method == 'POST':
+        id = int(request.get_json())
         
-        if r.status_code == 200: # Check if the request was successful
-            news_data[symbol] = {}
-            for i in range(5):
-                news_data[symbol][i] = r.json()['feed'][i] # Add the response data to the dictionary
-        else:
-            print(f"Failed to get data for {symbol}") # Handle the error case
+        notifications = Alerts.query.filter_by(user_id=current_user.id).all()
+        for notification in notifications:
+            print(type(notification.id))
+            print(type(id))
+            if notification.id == id:
+                print(notification.id)
+                print(id)
+                controller.deleteNotification(notification.id)
+    return jsonify({'status': 'success'})
+   
 
-    # Return the dictionary as JSON
-    return json.dumps(news_data)
-
-@app.route('/main-dashboard-data')
-def get_stock_data():
-    symbols = ['AAPL', 'AMZN', 'GOOGL', 'MSFT', 'TSLA', 'V', 'NFLX', 'DIS', 'NVDA', 'AMD', 'BA', 'GE', 'IBM', 'INTC', 'KO', 'PFE', 'XOM', 'CVX', 'T', 'VZ'] # List of symbols
-    headers = {
-        "content-type": "application/octet-stream",
-        "X-RapidAPI-Key": "c91a4b454emsh049aaf0bec003eep18bdf2jsn131c8d0ac347",
-        "X-RapidAPI-Host": "yahoo-finance15.p.rapidapi.com"
-    }
-    data = {} # Empty dictionary to store data for all symbols
-
-    for symbol in symbols:
-        url = f"https://yahoo-finance15.p.rapidapi.com/api/yahoo/qu/quote/{symbol}/financial-data"
-        response = requests.get(url, headers=headers)
-        print(response.status_code)
-        if response.status_code == 200: # Check if the request was successful
-            data[symbol] = response.json() # Add the response data to the dictionary
-        else:
-            print(f"Failed to get data for {symbol}") # Handle the error case
-
-    # Return the dictionary as JSON
-    return json.dumps(data)
+#----------------------------------------------------- Internal APIs ----------------------#
 
 @app.route('/data') # This is an API for the retriving data for the main dashbord 
 def get_chart_data():
    # generating random data for testing 
    f = open(os.path.join(os.getcwd(), "apps", "data_main.json"))
    return json.load(f)
+
 
 @app.route('/update_data' , methods = ['POST']) # This for updating the data in the dashboard
 def update_chart_data():
@@ -332,10 +344,6 @@ def add_to_watchlist():
     print(json.dumps(data))
 
     controller.addUserWatchList(item =json.dumps(data) , user_id=current_user.id)
-    # redirect(url_for('login'))
-    # render_template('home/page-500.html')
-    # with open("apps/User_watchlist.json", "w") as f:
-    #   json.dump(data, f)
     return jsonify({'status': 'success'})
   
 
@@ -356,18 +364,35 @@ def remove_from_watchlist():
 
     return jsonify({'status': 'success'})
 
+# ----------------------External API----------------------------------- 
 
-@app.route('/delete_notification', methods=['POST']) # this is a dummy api that should be removed 
-def delete_notification():
-    if request.method == 'POST':
-        id = int(request.get_json())
+@app.route('/main-dashboard-news-data')
+def get_news_data():
+
+    news_data = {}
+    symbols = ['AAPL', 'AMZN', 'TSLA', 'GOOG', 'NVDA']
+    apikey = "8X74CQALL5BWTHJE"
+
+    for symbol in symbols:
+        url = f"https://www.alphavantage.co/query?function=NEWS_SENTIMENT&tickers={symbol}&apikey={apikey}"
+        r = requests.get(url)
         
-        notifications = Alerts.query.filter_by(user_id=current_user.id).all()
-        for notification in notifications:
-            print(type(notification.id))
-            print(type(id))
-            if notification.id == id:
-                print(notification.id)
-                print(id)
-                controller.deleteNotification(notification.id)
-    return jsonify({'status': 'success'})
+        if r.status_code == 200: # Check if the request was successful
+            news_data[symbol] = {}
+            for i in range(5):
+                news_data[symbol][i] = r.json()['feed'][i] # Add the response data to the dictionary
+        else:
+            print(f"Failed to get data for {symbol}") # Handle the error case
+
+    # Return the dictionary as JSON
+    return json.dumps(news_data)
+
+
+@app.route('/globalMarketStatus') # This is an API for the retriving data for the main dashbord 
+def get_market_data():
+
+    apikey = "8X74CQALL5BWTHJE"
+    url = f"https://www.alphavantage.co/query?function=MARKET_STATUS&apikey={apikey}"
+    r = requests.get(url)
+    data = r.json()
+    return data['markets']
