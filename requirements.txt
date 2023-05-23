@@ -26,3 +26,4 @@ gunicorn==20.1.0
 applicationinsights==0.11.10
 pytest==6.2.4
 selenium==3.141.0
+coverage

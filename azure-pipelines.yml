@@ -38,6 +38,26 @@ stages:
         pip install -r requirements.txt
         pytest -k "test" .
       displayName: Run tests with Pytest
+
+  - job: coverage
+    displayName: Code coverage
+    dependsOn: test
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - script: |
+        python3 -m pip install --upgrade pip
+        pip install -r requirements.txt
+        coverage run --source=. -m pytest test_add_numbers.py
+        coverage report -m
+        coverage xml
+      displayName: Run tests with Pytest and Coverage.py
+    - task: PublishCodeCoverageResults@1
+      inputs:
+        codeCoverageTool: 'cobertura'
+        summaryFileLocation: '$(System.DefaultWorkingDirectory)/coverage.xml'
+        reportDirectory: '$(System.DefaultWorkingDirectory)/coverageReport'
+      displayName: Publish code coverage results
       
 
 - stage: Build
