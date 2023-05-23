@@ -6,6 +6,7 @@ Copyright (c) 2019 - present AppSeed.us
 # Flask modules
 from flask   import Flask, render_template, request, flash, redirect, url_for, jsonify
 import json
+import pytz
 from jinja2  import TemplateNotFound
 from .models import *
 from flask_login import login_user, login_required, current_user, logout_user
@@ -208,11 +209,50 @@ def get_segment(request):
 
     except:
         return None
+    
+#SET TIME, DATE, DAY
+@app.route('/set-time', methods=['GET','POST'])
+def set_time():
+    if request.method == 'POST':
+        user_id = current_user.id
+        time_str = request.form.get('time')
+        if time_str:
+            time = datetime.strptime(time_str, '%H:%M').time()
+        else:
+            time = None
+        date_str = request.form.get('date')
+        if date_str:
+            date = datetime.strptime(date_str, '%Y-%m-%d').date()
+        else:
+            date = None
+        day = request.form.get('day')
 
+        # Update the Timezone record with the new time, date, and day
+        timezone = Timezone.query.filter_by(user_id=user_id).first()
+        if timezone:
+            if time:
+                timezone.time = time
+            if date:
+                timezone.date = date
+            if day:
+                timezone.day = day
+        else:
+            # Create a new Timezone record for the current user
+            timezone = Timezone(user_id=user_id, time=str(time), date=str(date), day=day)
+            db.session.add(timezone)
 
-#---------------------------------------------------------- Notifications ---------------------------------
+        # Save changes to the database
+        db.session.commit()
+        return render_template('home/PrefrenceSettings.html', time=time, date=date,day=day)
 
-#Get Notifications
+@app.route('/get_time')
+def get_time():
+    user_id = current_user.id
+    timezone = Timezone.query.filter_by(user_id=user_id).first()
+    print(timezone)
+    return jsonify(timezone)
+
+# Get Notifications
 @app.route('/Notfications', methods=['GET', 'POST'])
 def getNotfication():
     if request.method == 'GET':
