@@ -201,7 +201,11 @@ def get_segment(request):
     except:
         return None
 
-
+@app.route('/index')
+@app.route('/main-dashboard.html')
+@login_required
+def index():
+    return render_template('home/main-dashboard.html', segment='index')
 
 
 # Get Notifications
@@ -224,19 +228,26 @@ def get_notoification_count():
             notification_count += 1
     print(notification_count)
     return jsonify(notification_count)
-    
-
-@app.route('/index')
-@app.route('/main-dashboard.html')
-@login_required
-def index():
-    # stock_data = generate_stock_data()
-    # with open("apps\dataMazen.json", "w") as f:
-    #     json.dump(stock_data, f)
-    return render_template('home/main-dashboard.html', segment='index')
 
 
-#----------- APIs---------#
+@app.route('/delete_notification', methods=['POST']) # this is a dummy api that should be removed 
+def delete_notification():
+    if request.method == 'POST':
+        id = int(request.get_json())
+        
+        notifications = Alerts.query.filter_by(user_id=current_user.id).all()
+        for notification in notifications:
+            print(type(notification.id))
+            print(type(id))
+            if notification.id == id:
+                print(notification.id)
+                print(id)
+                controller.deleteNotification(notification.id)
+    return jsonify({'status': 'success'})
+   
+
+#----------------------------------------------------- Internal APIs ----------------------#
+
 @app.route('/main-dashboard-news-data')
 def get_news_data():
 
@@ -369,17 +380,8 @@ def remove_from_watchlist():
     return jsonify({'status': 'success'})
 
 
-@app.route('/delete_notification', methods=['POST']) # this is a dummy api that should be removed 
-def delete_notification():
-    if request.method == 'POST':
-        id = int(request.get_json())
-        
-        notifications = Alerts.query.filter_by(user_id=current_user.id).all()
-        for notification in notifications:
-            print(type(notification.id))
-            print(type(id))
-            if notification.id == id:
-                print(notification.id)
-                print(id)
-                controller.deleteNotification(notification.id)
-    return jsonify({'status': 'success'})
+
+
+
+
+# ----------------------External API----------------------------------- 
