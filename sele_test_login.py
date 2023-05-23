@@ -1,4 +1,5 @@
 import unittest
+import os
 from selenium.webdriver.common.by import By
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
@@ -6,10 +7,14 @@ from selenium.webdriver.support import expected_conditions as EC
 from apps import app
 from apps.controller import *
 from werkzeug.security import generate_password_hash
+from selenium.webdriver.chrome.options import Options
 
 class TestIndex(unittest.TestCase):
     def setUp(self):
-        self.driver = webdriver.Chrome()
+        os.environ['PATH'] += r"D:\Uni\Year 5\Spring 2022\CIE 460 - SW\Assignment2"
+        options =Options()
+        options.add_experimental_option("excludeSwitches", ["enable-logging"])
+        self.driver = webdriver.Chrome(options=options)
         self.driver.get('http://localhost:5000/login')
         # create a test user
         with app.app_context():
