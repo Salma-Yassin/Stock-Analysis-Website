@@ -33,7 +33,7 @@ class FlaskTest(unittest.TestCase):
         db.drop_all()
         self.app_context.pop()
 
-    def test_notifications(self):
+    def test_dashboard(self):
 
         # log in the test user
         response = self.app.post('/login', data=dict(
@@ -43,31 +43,16 @@ class FlaskTest(unittest.TestCase):
 
 
         # check if the end point the expected response 
-        response = self.app.get('/get_notification_count')
+        response = self.app.get('/index')
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json, 2)
-
-        # Test /Notification route 
-        response = self.app.get('/Notfications')
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('1 Notification', response.data.decode())
-        self.assertIn('2 Notification', response.data.decode())
+        self.assertIn('Dashboard', response.data.decode())
 
 
-        # Test /delete_notification
-        response = self.app.post('/delete_notification', json = str(self.notification1.id), follow_redirects=True)
+        # check if the end point the expected response 
+        response = self.app.get('/data')
         self.assertEqual(response.status_code, 200)
+        data = json.loads(response.data.decode('utf-8'))  # parse the JSON list
+        self.assertEqual(len(data), 20)  # check that the length of the list is 20
+        
 
         
-        response = self.app.get('/Notfications')
-        self.assertEqual(response.status_code, 200)
-        self.assertNotIn('1 Notification', response.data.decode())
-        self.assertIn('2 Notification', response.data.decode())
-
-
-
-if __name__== "__main__":
-    unittest.main()
-
-
-    
