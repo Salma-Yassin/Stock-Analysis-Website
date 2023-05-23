@@ -12,10 +12,15 @@ class FlaskTest(unittest.TestCase):
         app.config['TESTING'] = True
         app.config['WTF_CSRF_ENABLED'] = False
         app.config['DEBUG'] = False
+        app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///test.db'
+
 
         self.app = app.test_client()
         self.app_context = app.app_context()
         self.app_context.push()
+
+        with app.app_context():
+            db.create_all()
 
         # create a test user
         new_user = controller.addUser(username = 'Testuser', email='Testuser@example.com', password= generate_password_hash('password', method='sha256'))
