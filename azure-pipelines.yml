@@ -82,6 +82,8 @@ stages:
     ## Add the below snippet at the end of your pipeline
     - task: AzureWebAppContainer@1
       displayName: 'Azure Web App on Container Deploy'
+      env:
+        "DEBUG": "True"
       inputs:
         azureSubscription: $(azureSubscription)
         appName: $(appName)
