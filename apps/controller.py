@@ -39,6 +39,7 @@ class controller:
         notification = Alerts(title = title ,content = content ,state='not done' ,user_id= user_id)
         db.session.add(notification)
         db.session.commit()
+        return notification
     
     def deleteNotification(id):
         Notification = Alerts.query.filter_by(id=id).first()
