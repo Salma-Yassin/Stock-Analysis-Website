@@ -13,6 +13,22 @@ countData.done(function (count) {
   notificationCountSpan.textContent = notificationCount;
 });
 
+var timeDate = $.get("/get_time");
+
+timeDate.done(function (data) {
+  console.log(data.date);
+  console.log(data.time);
+  console.log(data.day);
+  // Get the span element using its ID
+  const time = document.getElementById("time-input");
+  const date = document.getElementById("date-input");
+  const day = document.getElementById("day-input");
+  time.value = data.time;
+  date.value = data.date;
+  day.value = data.day;
+});
+
+
 // // Get the <a> element by its ID
 // const notificationLink = document.getElementById("notification-link");
 

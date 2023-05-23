@@ -231,7 +231,7 @@ def set_time():
                 timezone.day = day
         else:
             # Create a new Timezone record for the current user
-            timezone = Timezone(user_id=user_id, time=time, date=date, day=day)
+            timezone = Timezone(user_id=user_id, time=str(time), date=str(date), day=day)
             db.session.add(timezone)
 
         # Save changes to the database
@@ -242,9 +242,8 @@ def set_time():
 def get_time():
     user_id = current_user.id
     timezone = Timezone.query.filter_by(user_id=user_id).first()
-    print(timezone.time)
-    time = timezone.time
-    return jsonify(timezone.time)
+    print(timezone)
+    return jsonify(timezone)
 
 # Get Notifications
 @app.route('/Notfications', methods=['GET', 'POST'])
