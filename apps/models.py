@@ -34,7 +34,12 @@ class Alerts(db.Model):
     state = db.Column(db.String(10),nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('Users.id'), nullable=False)
 
+@dataclass
 class Timezone(db.Model):
+    time: str 
+    date: str
+    day: str
+
     __tablename__ = 'Timezone'
     user_id = db.Column(db.Integer, db.ForeignKey('Users.id'), nullable=False, primary_key=True)
     time = db.Column(db.Time, nullable=False)
