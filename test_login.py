@@ -2,6 +2,8 @@ from apps import app
 import unittest
 from apps.models import db 
 from apps.models import *
+from apps.controller import controller
+from werkzeug.security import generate_password_hash
 
 class FlaskTest(unittest.TestCase):
     def setUp(self):
@@ -18,9 +20,7 @@ class FlaskTest(unittest.TestCase):
             db.create_all()
 
         # create a test user
-        user = Users(username='testuser', email='testuser@example.com', password='password')
-        db.session.add(user)
-        db.session.commit()
+        new_user = controller.addUser(username = 'Testuser', email='Testuser@example.com', password= generate_password_hash('password', method='sha256'))
 
     def tearDown(self):
         db.session.remove()
@@ -28,14 +28,30 @@ class FlaskTest(unittest.TestCase):
         self.app_context.pop()
 
     def test_index(self):
+
+        ########### UnSuccessful Log in ###########
         # log in the test user
         response = self.app.post('/login', data=dict(
-            Username='testuser',
+            Username='Testuser',
+            Password='wrongpassword'
+        ), follow_redirects=True)
+
+        # follow the redirect to the protected route
+        response = self.app.get('/index')
+
+        # check that the status code is 200
+        statuscode = response.status_code
+        self.assertNotEqual(statuscode,200)
+
+        ########### Successful Log in ###########
+        # log in the test user
+        response = self.app.post('/login', data=dict(
+            Username='Testuser',
             Password='password'
         ), follow_redirects=True)
 
         # follow the redirect to the protected route
-        response = self.app.get('/fo', follow_redirects=True)
+        response = self.app.get('/index')
 
         # check that the status code is 200
         statuscode = response.status_code
