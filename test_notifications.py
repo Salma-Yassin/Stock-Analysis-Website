@@ -33,7 +33,7 @@ class FlaskTest(unittest.TestCase):
         db.drop_all()
         self.app_context.pop()
 
-    def test_dashboard(self):
+    def test_notifications(self):
 
         # log in the test user
         response = self.app.post('/login', data=dict(
