@@ -86,7 +86,3 @@ stages:
         azureSubscription: $(azureSubscription)
         appName: $(appName)
         imageName: $(containerRegistry)/$(imageRepository):$(tag)
-        appSettings: |
-          {
-            "DEBUG": "True"
-          }
