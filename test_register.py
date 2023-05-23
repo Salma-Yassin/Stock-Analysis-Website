@@ -7,11 +7,14 @@ class FlaskTest(unittest.TestCase):
     def setUp(self):
         app.config['TESTING'] = True
         app.config['WTF_CSRF_ENABLED'] = False
-        app.config['DEBUG'] = False
+        app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///test.db'
 
         self.app = app.test_client()
         self.app_context = app.app_context()
         self.app_context.push()
+
+        with app.app_context():
+            db.create_all()
 
     def tearDown(self):
         db.session.remove()
