@@ -90,6 +90,7 @@ mediator.register("get_chart_data", function (data) {
       const row = document.createElement("tr");
 
       const symbolCell = document.createElement("td");
+      symbolCell.className = "Stocks";
       symbolCell.textContent = symbol;
       row.appendChild(symbolCell);
 

@@ -177,6 +177,11 @@
             <div class="card-header border-0">
               <h3 class="card-title">Stocks</h3>
               <div class="card-tools">
+                <form id="search-form">
+                  <input type="text" id="search-input" placeholder="Search...">
+                  <button type="submit">Search</button>
+                </form>
+                
                 <a href="#" class="btn btn-tool btn-sm">
                   <i class="fas fa-download"></i>
                 </a>
@@ -239,6 +244,37 @@
 
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
+<script>
+  document.getElementById('search-form').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevents form submission
+
+    var searchTerm = document.getElementById('search-input').value.toLowerCase();
+    var elements = document.getElementsByClassName('Stocks'); // Modify the selector to match the elements you want to search within
+    
+    var found = false; // Flag to track if a match is found
+    
+    Array.from(elements).forEach(function(element) {
+      var text = element.textContent.toLowerCase();
+      if (text.includes(searchTerm)) {
+        element.style.backgroundColor = 'yellow'; // Modify the styling as desired
+        
+        // Scroll to the matched element
+        element.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+        
+        found = true; // Set the flag to true
+      } else {
+        element.style.backgroundColor = ''; // Reset the styling
+      }
+    });
+    
+    if (!found) {
+      alert('No matches found.'); // Display an alert if no matches are found
+    }
+  });
+</script>
 
 <!-- jQuery -->
 <script src="/static/assets/plugins/jquery/jquery.min.js"></script>
