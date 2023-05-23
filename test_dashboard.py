@@ -19,16 +19,13 @@ class FlaskTest(unittest.TestCase):
 
         # create a test user
         new_user = controller.addUser(username = 'Testuser', email='Testuser@example.com', password= generate_password_hash('password', method='sha256'))
-        self.notification1 = controller.insertNotification(title='1 Notification',content='Welcome to the website',user_id= new_user.id)
-        self.notification2 = controller.insertNotification(title='2 Notification',content='Welcome to the website',user_id= new_user.id)
      
-
     def tearDown(self):
         db.session.remove()
         db.drop_all()
         self.app_context.pop()
 
-    def test_dashboard(self):
+    def test_get_notification_count(self):
 
         # log in the test user
         response = self.app.post('/login', data=dict(
@@ -38,7 +35,7 @@ class FlaskTest(unittest.TestCase):
 
 
         # check if the end point the expected response 
-        response = self.app.get('/get_notification_count')
+        response = self.app.get('/data')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json, 2)
 

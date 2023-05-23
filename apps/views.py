@@ -37,8 +37,9 @@ def is_valid_string(s): # Check that the given string is a valid email
 def route_default():
     return redirect(url_for('login'))
 
-# Login & Registration
+#-------------------------------------------------- Routes ---------------------------------------
 
+# Login & Registration
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -63,6 +64,7 @@ def login():
         return render_template('accounts/login.html')
     return redirect(url_for('index'))
     
+# Register 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
 
@@ -112,13 +114,14 @@ def register():
     
     return render_template('accounts/register.html')
        
+# Logout        
 @app.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('login'))
 
-## profile Settings 
 
+## profile Settings 
 # Recover Password
 @app.route('/recoverpassword', methods=['GET', 'POST'])
 def recoverpassword():
@@ -164,6 +167,11 @@ def editingprofile():
         return render_template('home/edit-profile.html', user=current_user)
     
 
+@app.route('/index')
+@app.route('/main-dashboard.html')
+@login_required
+def index():
+    return render_template('home/main-dashboard.html', segment='index')
 
 @app.route('/<template>')
 @login_required
@@ -201,14 +209,10 @@ def get_segment(request):
     except:
         return None
 
-@app.route('/index')
-@app.route('/main-dashboard.html')
-@login_required
-def index():
-    return render_template('home/main-dashboard.html', segment='index')
 
+#---------------------------------------------------------- Notifications ---------------------------------
 
-# Get Notifications
+#Get Notifications
 @app.route('/Notfications', methods=['GET', 'POST'])
 def getNotfication():
     if request.method == 'GET':
@@ -248,67 +252,12 @@ def delete_notification():
 
 #----------------------------------------------------- Internal APIs ----------------------#
 
-@app.route('/main-dashboard-news-data')
-def get_news_data():
-
-    news_data = {}
-    symbols = ['AAPL', 'AMZN', 'TSLA', 'GOOG', 'NVDA']
-    apikey = "8X74CQALL5BWTHJE"
-
-    for symbol in symbols:
-        url = f"https://www.alphavantage.co/query?function=NEWS_SENTIMENT&tickers={symbol}&apikey={apikey}"
-        r = requests.get(url)
-        
-        if r.status_code == 200: # Check if the request was successful
-            news_data[symbol] = {}
-            for i in range(5):
-                news_data[symbol][i] = r.json()['feed'][i] # Add the response data to the dictionary
-        else:
-            print(f"Failed to get data for {symbol}") # Handle the error case
-
-    # Return the dictionary as JSON
-    return json.dumps(news_data)
-
-@app.route('/main-dashboard-data')
-def get_stock_data():
-    symbols = ['AAPL', 'AMZN', 'GOOGL', 'MSFT', 'TSLA', 'V', 'NFLX', 'DIS', 'NVDA', 'AMD', 'BA', 'GE', 'IBM', 'INTC', 'KO', 'PFE', 'XOM', 'CVX', 'T', 'VZ'] # List of symbols
-    headers = {
-        "content-type": "application/octet-stream",
-        "X-RapidAPI-Key": "c91a4b454emsh049aaf0bec003eep18bdf2jsn131c8d0ac347",
-        "X-RapidAPI-Host": "yahoo-finance15.p.rapidapi.com"
-    }
-    data = {} # Empty dictionary to store data for all symbols
-
-    for symbol in symbols:
-        url = f"https://yahoo-finance15.p.rapidapi.com/api/yahoo/qu/quote/{symbol}/financial-data"
-        response = requests.get(url, headers=headers)
-        print(response.status_code)
-        if response.status_code == 200: # Check if the request was successful
-            data[symbol] = response.json() # Add the response data to the dictionary
-        else:
-            print(f"Failed to get data for {symbol}") # Handle the error case
-
-    # Return the dictionary as JSON
-    return json.dumps(data)
-
 @app.route('/data') # This is an API for the retriving data for the main dashbord 
 def get_chart_data():
    # generating random data for testing 
    f = open(os.path.join(os.getcwd(), "apps", "data_main.json"))
    return json.load(f)
 
-
-@app.route('/globalMarketStatus') # This is an API for the retriving data for the main dashbord 
-def get_market_data():
-
-    apikey = "8X74CQALL5BWTHJE"
-    url = f"https://www.alphavantage.co/query?function=MARKET_STATUS&apikey={apikey}"
-    r = requests.get(url)
-    data = r.json()
-    # generating random data for testing 
-    #f = open(os.path.join(os.getcwd(), "apps", "market_data.json"))
-    # return json.load(f)
-    return data['markets']
 
 @app.route('/update_data' , methods = ['POST']) # This for updating the data in the dashboard
 def update_chart_data():
@@ -355,10 +304,6 @@ def add_to_watchlist():
     print(json.dumps(data))
 
     controller.addUserWatchList(item =json.dumps(data) , user_id=current_user.id)
-    # redirect(url_for('login'))
-    # render_template('home/page-500.html')
-    # with open("apps/User_watchlist.json", "w") as f:
-    #   json.dump(data, f)
     return jsonify({'status': 'success'})
   
 
@@ -379,9 +324,35 @@ def remove_from_watchlist():
 
     return jsonify({'status': 'success'})
 
-
-
-
-
-
 # ----------------------External API----------------------------------- 
+
+@app.route('/main-dashboard-news-data')
+def get_news_data():
+
+    news_data = {}
+    symbols = ['AAPL', 'AMZN', 'TSLA', 'GOOG', 'NVDA']
+    apikey = "8X74CQALL5BWTHJE"
+
+    for symbol in symbols:
+        url = f"https://www.alphavantage.co/query?function=NEWS_SENTIMENT&tickers={symbol}&apikey={apikey}"
+        r = requests.get(url)
+        
+        if r.status_code == 200: # Check if the request was successful
+            news_data[symbol] = {}
+            for i in range(5):
+                news_data[symbol][i] = r.json()['feed'][i] # Add the response data to the dictionary
+        else:
+            print(f"Failed to get data for {symbol}") # Handle the error case
+
+    # Return the dictionary as JSON
+    return json.dumps(news_data)
+
+
+@app.route('/globalMarketStatus') # This is an API for the retriving data for the main dashbord 
+def get_market_data():
+
+    apikey = "8X74CQALL5BWTHJE"
+    url = f"https://www.alphavantage.co/query?function=MARKET_STATUS&apikey={apikey}"
+    r = requests.get(url)
+    data = r.json()
+    return data['markets']
