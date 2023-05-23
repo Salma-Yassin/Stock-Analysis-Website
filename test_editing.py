@@ -24,8 +24,6 @@ class FlaskTest(unittest.TestCase):
 
         # create a test user
         new_user = controller.addUser(username = 'Testuser', email='Testuser@example.com', password= generate_password_hash('password', method='sha256'))
-        self.notification1 = controller.insertNotification(title='1 Notification',content='Welcome to the website',user_id= new_user.id)
-        self.notification2 = controller.insertNotification(title='2 Notification',content='Welcome to the website',user_id= new_user.id)
      
 
     def tearDown(self):
@@ -33,27 +31,53 @@ class FlaskTest(unittest.TestCase):
         db.drop_all()
         self.app_context.pop()
 
-    def test_dashboard(self):
+    def test_Edit_profile(self):
 
         # log in the test user
         response = self.app.post('/login', data=dict(
             Username='Testuser',
             Password='password'
         ), follow_redirects=True)
+
+    
+    # check if the end point the expected response 
+        response = self.app.post('/editingprofile',data={
+                'edit_account': '1',
+                'username_edit': 'ModifiedUser',
+                'email_edit':'',
+            })
         
-        self.assertEqual(response.status_code, 200)
+        # check it is redirected to the index page 
+        self.assertEqual(response.status_code, 302)
+        
+    # log out the user
+        response = self.app.get('/logout', follow_redirects=True)
+
+        # log in with wrong password 
+        response = self.app.post('/login', data=dict(
+            Username='Testuser',
+            Password='password'
+        ), follow_redirects=True)
+
+        # check if the end point the expected response 
+        response = self.app.get('/index')
+        self.assertNotEqual(response.status_code, 200)
+
+        # log in with the correct 
+        response = self.app.post('/login', data=dict(
+            Username='ModifiedUser',
+            Password='password'
+        ), follow_redirects=True)
 
         # check if the end point the expected response 
         response = self.app.get('/index')
         self.assertEqual(response.status_code, 200)
-        self.assertIn('Dashboard', response.data.decode())
 
 
-        # check if the end point the expected response 
-        response = self.app.get('/data')
-        self.assertEqual(response.status_code, 200)
-        data = json.loads(response.data.decode('utf-8'))  # parse the JSON list
-        self.assertEqual(len(data), 20)  # check that the length of the list is 20
-        
 
-        
+
+if __name__== "__main__":
+    unittest.main()
+
+
+    
