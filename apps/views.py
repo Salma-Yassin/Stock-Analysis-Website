@@ -6,7 +6,6 @@ Copyright (c) 2019 - present AppSeed.us
 # Flask modules
 from flask   import Flask, render_template, request, flash, redirect, url_for, jsonify
 import json
-import pytz
 from jinja2  import TemplateNotFound
 from .models import *
 from flask_login import login_user, login_required, current_user, logout_user
