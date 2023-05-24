@@ -72,6 +72,8 @@
     height: 1400px;
     /* Set the height of the card body */
   }
+
+
 </style>
 <div class="content-wrapper">
   <!-- Content Header (Page header) -->
@@ -244,6 +246,7 @@
 
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
+<script src="search.js"></script>
 <script>
   document.getElementById('search-form').addEventListener('submit', function(event) {
     event.preventDefault(); // Prevents form submission
@@ -261,7 +264,7 @@
         // Scroll to the matched element
         element.scrollIntoView({
           behavior: 'smooth',
-          block: 'start'
+          block: 'center'
         });
         
         found = true; // Set the flag to true

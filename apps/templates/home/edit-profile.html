@@ -7,6 +7,8 @@
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v11.0&appId=1068472514127208&autoLogAppEvents=1"></script>
+<script async defer src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
 <!-- Google Font: Source Sans Pro -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -63,6 +65,7 @@
           <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="#">Home</a></li>
             <li class="breadcrumb-item active">User Profile</li>
+            
           </ol>
         </div>
       </div>
@@ -81,6 +84,9 @@
               <div class="text-center">
                 <img class="profile-user-img img-fluid img-circle" src="/static/assets/img/account.png"
                   alt="User profile picture">
+
+                 
+                  
               </div>
 
               <h3 class="profile-username text-center">
@@ -133,6 +139,7 @@
                           name="username_edit">
                       </div>
                     </div>
+                    
                     <div class="form-group row">
                       <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
                       <div class="col-sm-10">
@@ -140,6 +147,12 @@
                           name="email_edit">
                       </div>
                     </div>
+                    <div class="fb-share-button" data-href="" data-layout="button" data-size="large">
+                      <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=" class="fb-xfbml-parse-ignore">Share</a>
+                    </div>
+                    <a href="https://twitter.com/share" class="twitter-share-button" data-text="Check out my Profile!" data-url=pageUrl>Tweet</a>
+
+                    
 
                     <div class="form-group row">
                       <div class="offset-sm-2 col-sm-10">
@@ -212,6 +225,21 @@
 
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
+<script>
+  var pageUrl = window.location.href;
+  var shareButton = document.querySelector('.fb-share-button');
+  var shareLink = document.querySelector('.fb-share-button a');
+  
+  shareButton.setAttribute('data-href', pageUrl);
+  shareLink.href = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(pageUrl);
+  </script>
+  <script>
+    var pageUrl = window.location.href;
+    var tweetButton = document.querySelector('.twitter-share-button');
+    
+    tweetButton.setAttribute('data-url', pageUrl);
+    </script>
+    
 
 <!-- jQuery -->
 <script src="/static/assets/plugins/jquery/jquery.min.js"></script>
