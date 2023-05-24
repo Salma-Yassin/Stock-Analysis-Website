@@ -350,7 +350,6 @@ def add_to_watchlist():
 def remove_from_watchlist():
     if request.method == 'POST':
         data = request.get_json()
-        print(data)
         required_symbol = list(data.keys())[0] 
 
         watchList = UserWatchList.query.filter_by(user_id=current_user.id)
