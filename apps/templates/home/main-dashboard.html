@@ -72,6 +72,8 @@
     height: 1400px;
     /* Set the height of the card body */
   }
+
+
 </style>
 <div class="content-wrapper">
   <!-- Content Header (Page header) -->
@@ -239,6 +241,41 @@
 
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
+<<<<<<< HEAD
+=======
+<script src="search.js"></script>
+<script>
+  document.getElementById('search-form').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevents form submission
+
+    var searchTerm = document.getElementById('search-input').value.toLowerCase();
+    var elements = document.getElementsByClassName('Stocks'); // Modify the selector to match the elements you want to search within
+    
+    var found = false; // Flag to track if a match is found
+    
+    Array.from(elements).forEach(function(element) {
+      var text = element.textContent.toLowerCase();
+      if (text.includes(searchTerm)) {
+        element.style.backgroundColor = 'yellow'; // Modify the styling as desired
+        
+        // Scroll to the matched element
+        element.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center'
+        });
+        
+        found = true; // Set the flag to true
+      } else {
+        element.style.backgroundColor = ''; // Reset the styling
+      }
+    });
+    
+    if (!found) {
+      alert('No matches found.'); // Display an alert if no matches are found
+    }
+  });
+</script>
+>>>>>>> Phase4-Mazen
 
 <!-- jQuery -->
 <script src="/static/assets/plugins/jquery/jquery.min.js"></script>
