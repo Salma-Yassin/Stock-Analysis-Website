@@ -48,7 +48,7 @@ stages:
     - script: |
         python3 -m pip install --upgrade pip
         pip install -r requirements.txt
-        coverage run --source=. --omit=app.py -m pytest -k "test" .
+        coverage run --source=. --omit=app.py,generate_stock_data.py -m pytest -k "test" . 
         coverage report -m
         coverage xml
       displayName: Run tests with Pytest and Coverage.py
@@ -82,11 +82,9 @@ stages:
     ## Add the below snippet at the end of your pipeline
     - task: AzureWebAppContainer@1
       displayName: 'Azure Web App on Container Deploy'
+      env:
+        "DEBUG": "True"
       inputs:
         azureSubscription: $(azureSubscription)
         appName: $(appName)
         imageName: $(containerRegistry)/$(imageRepository):$(tag)
-        appSettings: |
-      {
-        "DEBUG": "True"
-      }
