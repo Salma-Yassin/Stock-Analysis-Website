@@ -351,6 +351,7 @@ def add_to_watchlist():
 def remove_from_watchlist():
     if request.method == 'POST':
         data = request.get_json()
+        print(data)
         required_symbol = list(data.keys())[0] 
 
         watchList = UserWatchList.query.filter_by(user_id=current_user.id)
@@ -365,34 +366,64 @@ def remove_from_watchlist():
     return jsonify({'status': 'success'})
 
 # ----------------------External API----------------------------------- 
+def get_number():
+    num = 0
+    while True:
+        yield num
+        num = (num + 1) % 16
+
+gen =get_number()
 
 @app.route('/main-dashboard-news-data')
 def get_news_data():
 
+    global gen
     news_data = {}
     symbols = ['AAPL', 'AMZN', 'TSLA', 'GOOG', 'NVDA']
-    apikey = "8X74CQALL5BWTHJE"
+    apikeys = [ "7VSQJB85RY0OBWE9", "I7H3OOKH37C1MT8O", "BCD6AKBGQASXE92H", "9SUOZO7OZ16VOGVC", "DHBD96THA8FLS2H1",
+               "W85XRNJKPH46CXX3", "KU0IZI4NDPQNACE6", "Z8D1ZV96W4CJP2U7", "DD1RET72345IERXS", "DP45IWMGHW850DRA", "FFR3ALX5E3WE8H60",
+               "60FU43256A9DOOVI", "CRUX2206V4TNBKBU", "OVEI32U4J9NMXNKM", "HHO3SOMBK0QIWTE3"]
 
-    for symbol in symbols:
+    for symbol in (symbols):
+        print("****************************************")
+        apikey = apikeys[next(gen)]
+        print(apikey)
         url = f"https://www.alphavantage.co/query?function=NEWS_SENTIMENT&tickers={symbol}&apikey={apikey}"
         r = requests.get(url)
-        
-        if r.status_code == 200: # Check if the request was successful
-            news_data[symbol] = {}
-            for i in range(5):
-                news_data[symbol][i] = r.json()['feed'][i] # Add the response data to the dictionary
-        else:
-            print(f"Failed to get data for {symbol}") # Handle the error case
 
-    # Return the dictionary as JSON
+        if r.status_code == 200:
+            data = r.json()
+            if 'feed' in data:
+                news_data[symbol] = {}
+                for i in range(5):
+                    news_data[symbol][i] = data['feed'][i]
+            else:
+                print(f"Failed to get news data for {symbol}: {data.get('Error Message')}")
+        else:
+            print(f"Failed to get data for {symbol}")
+
     return json.dumps(news_data)
 
 
 @app.route('/globalMarketStatus') # This is an API for the retriving data for the main dashbord 
 def get_market_data():
+    global gen
+    apikeys = [ "7VSQJB85RY0OBWE9", "I7H3OOKH37C1MT8O", "BCD6AKBGQASXE92H", "9SUOZO7OZ16VOGVC", "DHBD96THA8FLS2H1",
+               "W85XRNJKPH46CXX3", "KU0IZI4NDPQNACE6", "Z8D1ZV96W4CJP2U7", "DD1RET72345IERXS", "DP45IWMGHW850DRA", "FFR3ALX5E3WE8H60",
+               "60FU43256A9DOOVI", "CRUX2206V4TNBKBU", "OVEI32U4J9NMXNKM", "HHO3SOMBK0QIWTE3"]
 
-    apikey = "8X74CQALL5BWTHJE"
+    apikey = apikeys[next(gen)]
     url = f"https://www.alphavantage.co/query?function=MARKET_STATUS&apikey={apikey}"
     r = requests.get(url)
+
+    if r.status_code == 200:
+        data = r.json()
+        if 'markets' in data:
+            print('there is data OK')
+        else:
+            print(f"Failed to get news data for {apikey}: {data.get('Error Message')}")
+    else:
+        print(f"Failed to get data for {apikey}")
+        
     data = r.json()
     return data['markets']
