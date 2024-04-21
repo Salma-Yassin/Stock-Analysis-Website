@@ -19,10 +19,6 @@ Some of the key features we plan to include in this web application are:
 - Historical data analysis for stocks
 - User notifications settings
 
-## Getting Started
-
-This project is currently in the planning phase and has not been developed yet.
-
 ## License
 
 This project is licensed under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).
